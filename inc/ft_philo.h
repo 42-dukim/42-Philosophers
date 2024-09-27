@@ -7,7 +7,6 @@
 # include <string.h>
 # include <sys/time.h>
 # include <pthread.h>
-# include "../libft/libft.h"
 
 typedef unsigned int    uint;
 

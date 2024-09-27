@@ -19,6 +19,22 @@ typedef struct	s_philo_option
 	uint		nme;
 }				t_philo_opt;
 
+typedef struct		s_philo_information
+{
+	uint			i;
+	t_philo_opt		*opt;
+	pthread_mutex_t	*forks;
+
+}					t_philo_info;
+
+typedef struct		s_forks
+{
+	pthread_mutex_t	*left;
+	pthread_mutex_t	*right
+}					t_forks;
+
+
 t_philo_opt	parse_arg_to_philo_opt(int argc, char *argv[]);
+void		*routine(void *opt);
 
 #endif

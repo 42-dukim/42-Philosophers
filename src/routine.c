@@ -12,7 +12,7 @@
 
 #include "../inc/ft_philo.h"
 
-int	take_fork(uint i_philo, t_forks forks)
+static int	ph_take_fork(uint i_philo, t_forks forks)
 {
 	if (i_philo % 2)
 	{	
@@ -26,37 +26,37 @@ int	take_fork(uint i_philo, t_forks forks)
 	}
 }
 
-int	eat(uint i_philo, t_forks forks, uint time_to_eat)
+static int	ph_eat(uint i_philo, t_forks forks, uint time_to_eat)
 {
 	usleep(time_to_eat);
 	pthread_mutex_unlock(forks.left);
 	pthread_mutex_unlock(forks.right);
 }
 
-int	sleep(uint i_philo, uint time_to_sleep)
+static int	ph_sleep(uint i_philo, uint time_to_sleep)
 {
 	usleep(time_to_sleep);
+	return (0);
 }
 
-int	think(uint i_philo)
+static int	ph_think(uint i_philo)
 {
 
 }
 
-void	*routine(void *opt)
+void	*routine(void *arg)
 {
 	t_philo_info	*info;
 	t_forks			forks;
 
-	info = (t_philo_info *)opt;
+	info = (t_philo_info *)arg;
 	forks.right = &(info->forks[info->i % info->opt->nop]);
 	forks.left = &(info->forks[(info->i + 1) % info->opt->nop]);
-
 	while (1)
 	{
-		take_fork(info->i, forks);
-		eat(info->i, forks, info->opt->tte);
-		sleep(info->i, info->opt->tts);
-		think(info->i);
+		ph_take_fork(info->i, forks);
+		ph_eat(info->i, forks, info->opt->tte);
+		ph_sleep(info->i, info->opt->tts);
+		ph_think(info->i);
 	}
 }

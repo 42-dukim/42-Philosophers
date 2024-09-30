@@ -19,14 +19,17 @@ pthread_mutex_t	*create_forks(uint num_of_philo)
 
 	forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * num_of_philo);
 	if (!forks)
-		retunr (NULL);
+		return (NULL);
+	i = 0;
 	while (i < num_of_philo)
 	{
-		if (pthread_mutex_init(&forks[i], NULL));
-		{
-			free(forks);
-			return (NULL);
-		}
+		// if (pthread_mutex_init(&forks[i], NULL));
+		// {
+		// 	free(forks);
+		// 	return (NULL);
+		// }
+		pthread_mutex_init(&forks[i], NULL);
 		i++;
 	}
+	return (forks);
 }

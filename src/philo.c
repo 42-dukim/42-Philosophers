@@ -12,18 +12,25 @@
 
 #include "../inc/ft_philo.h"
 
-pthread_t   *create_philos(uint num_of_philo)
+pthread_t	*create_philos(t_philo_opt	*opt, pthread_mutex_t *forks)
 {
-	pthread_t	*philos;
-	uint		i;
+	pthread_t		*philos;
+	t_philo_info	*infos;
+	uint			i;
 
-	philos = (pthread_t *)malloc(sizeof(pthread_t) * num_of_philo);
+	philos = (pthread_t *)malloc(sizeof(pthread_t) * opt->nop);
+	infos = (t_philo_info *)malloc(sizeof(t_philo_info) * opt->nop);
 	i = 0;
-	while (i < num_of_philo)
+	while (i < opt->nop)
 	{
-		if (pthread_create(&philos[i], NULL, &routine, NULL))
+		infos[i].i = i;
+		infos[i].opt = opt;
+		infos[i].forks = forks;
+		// printf("%d: %p\n", i, forks);
+		if (pthread_create(&philos[i], NULL, &routine, &infos[i]))
 		{
 			free(philos);
+			free(infos);
 			return (NULL);
 		}
 		i++;

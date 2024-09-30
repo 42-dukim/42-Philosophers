@@ -52,6 +52,7 @@ void	*routine(void *arg)
 	info = (t_philo_info *)arg;
 	forks.right = &(info->forks[info->i % info->opt->nop]);
 	forks.left = &(info->forks[(info->i + 1) % info->opt->nop]);
+	printf("%d: %p %p\n", info->i, forks.right, forks.right);
 	while (1)
 	{
 		ph_take_fork(info->i, forks);

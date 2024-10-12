@@ -35,10 +35,11 @@ typedef struct s_philo_option
 typedef struct s_philo_information
 {
 	uint			i;
-	t_philo_opt		*opt;
-	pthread_mutex_t	*forks;
 	uint			ttpe;			// time to pre eat
-}					t_philo_info;
+	pthread_t		thread;
+	pthread_mutex_t	*forks;
+	t_philo_opt		opt;
+}					t_philo;
 
 typedef struct s_forks
 {
@@ -56,10 +57,10 @@ typedef enum e_routine_code
 }				t_routine_code;
 
 t_philo_opt		parse_arg_to_philo_opt(int argc, char *argv[]);
-pthread_t		*create_philos(t_philo_opt	*opt, pthread_mutex_t *forks);
+t_philo			*create_philos(t_philo_opt	opt, pthread_mutex_t *forks);
 pthread_mutex_t	*create_forks(uint num_of_philo);
 void			*routine(void *opt);
-uint			print_philo(t_philo_opt opt, t_philo_info *philo, \
-								t_routine_code code, struct timeval exec_time)
+uint			print_philo(t_philo philo, t_routine_code code, struct timeval exec_time);
+void	handle_monitoring(t_philo *philos);
 
 #endif

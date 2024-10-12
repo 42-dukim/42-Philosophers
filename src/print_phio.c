@@ -32,21 +32,20 @@ static void	print_philo_stat(uint i_philo, uint time_stamp, t_routine_code code)
 		printf("%5u %u is thinking\n", time_stamp, i_philo);
 	if (code == END)
 	{
-		printf("%5u %u is dited\n", time_stamp, i_philo);
+		printf("%5u %u is died\n", time_stamp, i_philo);
 		free(print_mutext);
 	}
 	pthread_mutex_unlock(print_mutext);
 }
 
-uint	print_philo(t_philo_opt opt, t_philo_info *philo, \
-						t_routine_code code, struct timeval exec_time)
+uint	print_philo(t_philo philo, t_routine_code code, struct timeval exec_time)
 {
 	struct timeval			gep_time;
 	uint					time_stamp;
 
-	gep_time.tv_sec = exec_time.tv_sec - opt.time.tv_sec;
-	gep_time.tv_usec = exec_time.tv_usec - opt.time.tv_usec;
+	gep_time.tv_sec = exec_time.tv_sec - philo.opt.time.tv_sec;
+	gep_time.tv_usec = exec_time.tv_usec - philo.opt.time.tv_usec;
 	time_stamp = gep_time.tv_sec * 1000 + gep_time.tv_usec / 1000;
-	print_philo_stat(philo->i, time_stamp, code);
+	print_philo_stat(philo.i, time_stamp, code);
 	return (time_stamp);
 }

@@ -16,7 +16,7 @@ int	main(int argc, char *argv[])
 {
 	t_philo_opt		opt;
 	pthread_mutex_t	*forks;
-	pthread_t		*philos;
+	t_philo			*philos;
 
 	if (argc < 5 || argc > 6)
 		return (0);
@@ -24,12 +24,13 @@ int	main(int argc, char *argv[])
 	// printf("number_of_philosophers: %u\ntime_to_die: %u\ntime_to_eat: %u\ntime_to_sleep: %u\nnumber_of_times_each_philosopher_must_eat: %u\n", \
 	// 		opt.nop, opt.ttd, opt.tte, opt.tts, opt.nme);
 	forks = create_forks(opt.nop);
-	philos = create_philos(&opt, forks);
+	philos = create_philos(opt, forks);
 
 	uint i = 0;
 	while (i < opt.nop)
 	{
-		pthread_join(philos[i], NULL);
+		pthread_join(philos[i].thread, NULL);
 		i++;
 	}
+	handle_monitoring(philos);
 }

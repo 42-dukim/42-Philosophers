@@ -12,52 +12,72 @@
 
 #include "../inc/ft_philo.h"
 
-static int	ph_take_fork(uint i_philo, t_forks forks)
+static int	ph_take_fork(t_philo philo, t_forks forks)
 {
-	if (i_philo % 2)
+	struct timeval exec_time;
+	
+	if ((philo.i) % 2)
 	{	
 		pthread_mutex_lock(forks.left);
+		gettimeofday(&exec_time, NULL);
+		print_philo(philo, TAKE_FORK, exec_time);
 		pthread_mutex_lock(forks.right);
+		gettimeofday(&exec_time, NULL);
+		print_philo(philo, TAKE_FORK, exec_time);
 	}
 	else
 	{
 		pthread_mutex_lock(forks.right);
+		gettimeofday(&exec_time, NULL);
+		print_philo(philo, TAKE_FORK, exec_time);
 		pthread_mutex_lock(forks.left);
+		gettimeofday(&exec_time, NULL);
+		print_philo(philo, TAKE_FORK, exec_time);
 	}
 }
 
-static int	ph_eat(uint i_philo, t_forks forks, uint time_to_eat)
+static int	ph_eat(t_philo philo, t_forks forks)
 {
-	usleep(time_to_eat);
+	struct timeval exec_time;
+
+	gettimeofday(&exec_time, NULL);
+	print_philo(philo, EAT, exec_time);
+	usleep(philo.opt.tte);
 	pthread_mutex_unlock(forks.left);
 	pthread_mutex_unlock(forks.right);
 }
 
-static int	ph_sleep(uint i_philo, uint time_to_sleep)
+static int	ph_sleep(t_philo philo)
 {
-	usleep(time_to_sleep);
+	struct timeval exec_time;
+
+	gettimeofday(&exec_time, NULL);
+	print_philo(philo, SLEEP, exec_time);
+	usleep(philo.opt.tts);
 	return (0);
 }
 
-static int	ph_think(uint i_philo)
+static int	ph_think(t_philo philo)
 {
+	struct timeval exec_time;
 
+	gettimeofday(&exec_time, NULL);
+	print_philo(philo, THINK, exec_time);
 }
 
 void	*routine(void *arg)
 {
-	t_philo_info	*info;
+	t_philo			*philo;
 	t_forks			forks;
 
-	info = (t_philo_info *)arg;
-	forks.right = &(info->forks[info->i % info->opt->nop]);
-	forks.left = &(info->forks[(info->i + 1) % info->opt->nop]);
-	printf("%d: %p %p\n", info->i, forks.right, forks.right);
+	philo = (t_philo *)arg;
+	forks.right = &(philo->forks[philo->i % philo->opt.nop]);
+	forks.left = &(philo->forks[(philo->i + 1) % philo->opt.nop]);
 	while (1)
 	{
-		ph_take_fork(info->i, forks);
-		ph_eat(info->i, forks, info->opt->tte);
-		ph_sleep(info->i, info->opt->tts);
-		ph_think(info->i);
+		ph_take_fork(*philo, forks);
+		ph_eat(*philo, forks);
+		ph_sleep(*philo);
+		ph_think(*philo);
 	}
 }

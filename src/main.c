@@ -25,4 +25,11 @@ int	main(int argc, char *argv[])
 	// 		opt.nop, opt.ttd, opt.tte, opt.tts, opt.nme);
 	forks = create_forks(opt.nop);
 	philos = create_philos(&opt, forks);
+
+	uint i = 0;
+	while (i < opt.nop)
+	{
+		pthread_join(philos[i], NULL);
+		i++;
+	}
 }

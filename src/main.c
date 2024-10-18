@@ -26,11 +26,11 @@ int	main(int argc, char *argv[])
 	forks = create_forks(opt.nop);
 	philos = create_philos(opt, forks);
 
+	handle_monitoring(philos);
 	uint i = 0;
 	while (i < opt.nop)
 	{
-		pthread_join(philos[i].thread, NULL);
+		pthread_detach(philos[i].thread);
 		i++;
 	}
-	handle_monitoring(philos);
 }

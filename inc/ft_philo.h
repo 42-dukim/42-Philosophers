@@ -35,7 +35,7 @@ typedef struct s_philo_option
 typedef struct s_philo_information
 {
 	uint			i;
-	uint			ttpe;			// time to pre eat
+	int				ttpe;			// time to pre eat
 	pthread_t		thread;
 	pthread_mutex_t	*forks;
 	t_philo_opt		opt;

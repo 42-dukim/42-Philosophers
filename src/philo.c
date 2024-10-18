@@ -24,7 +24,7 @@ t_philo	*create_philos(t_philo_opt	opt, pthread_mutex_t *forks)
 	while (i < opt.nop)
 	{
 		philos[i].i = i;
-		philos[i].ttpe = opt.tte;
+		philos[i].ttpe = opt.ttd;
 		philos[i].forks = forks;
 		philos[i].opt = opt;
 		if (pthread_create(&philo_threads[i], NULL, &routine, &philos[i]))

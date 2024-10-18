@@ -16,7 +16,7 @@ static int	ph_take_fork(t_philo philo, t_forks forks)
 {
 	struct timeval exec_time;
 	
-	if ((philo.i) % 2)
+	if (philo.i % 2)
 	{	
 		pthread_mutex_lock(forks.left);
 		gettimeofday(&exec_time, NULL);
@@ -36,13 +36,14 @@ static int	ph_take_fork(t_philo philo, t_forks forks)
 	}
 }
 
-static int	ph_eat(t_philo philo, t_forks forks)
+static int	ph_eat(t_philo *philo, t_forks forks)
 {
 	struct timeval exec_time;
 
 	gettimeofday(&exec_time, NULL);
-	print_philo(philo, EAT, exec_time);
-	usleep(philo.opt.tte);
+	print_philo(*philo, EAT, exec_time);
+	usleep(philo->opt.tte * 1000);
+	philo->ttpe = philo->opt.ttd;
 	pthread_mutex_unlock(forks.left);
 	pthread_mutex_unlock(forks.right);
 }
@@ -53,7 +54,7 @@ static int	ph_sleep(t_philo philo)
 
 	gettimeofday(&exec_time, NULL);
 	print_philo(philo, SLEEP, exec_time);
-	usleep(philo.opt.tts);
+	usleep(philo.opt.tts * 1000);
 	return (0);
 }
 
@@ -71,12 +72,14 @@ void	*routine(void *arg)
 	t_forks			forks;
 
 	philo = (t_philo *)arg;
+	if (philo->i % 2)
+		usleep(1000);
 	forks.right = &(philo->forks[philo->i % philo->opt.nop]);
 	forks.left = &(philo->forks[(philo->i + 1) % philo->opt.nop]);
 	while (1)
 	{
 		ph_take_fork(*philo, forks);
-		ph_eat(*philo, forks);
+		ph_eat(philo, forks);
 		ph_sleep(*philo);
 		ph_think(*philo);
 	}

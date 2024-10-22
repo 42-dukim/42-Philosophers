@@ -37,16 +37,19 @@ static int	ft_atoi(const char *nptr)
 	return (sum);
 }
 
-t_philo_opt	parse_arg_to_philo_opt(int argc, char *argv[])
+t_philo_opt	*parse_arg_to_philo_opt(int argc, char *argv[])
 {
-	t_philo_opt opt;
+	t_philo_opt *opt;
 
-	opt.nop = ft_atoi(argv[1]);
-	opt.ttd = ft_atoi(argv[2]);
-	opt.tte = ft_atoi(argv[3]);
-	opt.tts = ft_atoi(argv[4]);
-	gettimeofday(&opt.time, NULL);
+	opt = (t_philo_opt *)malloc(sizeof(t_philo_opt) * 1);
+	if (!opt)
+		return (0);
+	opt->nop = ft_atoi(argv[1]);
+	opt->ttd = ft_atoi(argv[2]);
+	opt->tte = ft_atoi(argv[3]);
+	opt->tts = ft_atoi(argv[4]);
+	gettimeofday(&(opt->time), NULL);
 	if (argc == 6)
-		opt.nme = ft_atoi(argv[5]);
+		opt->nme = ft_atoi(argv[5]);
 	return (opt);
 }

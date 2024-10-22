@@ -12,40 +12,41 @@
 
 #include "../inc/ft_philo.h"
 
-static void	starve_philo(t_philo philo)
+static void	starve_philo(uint i_philo, struct timeval start_time)
 {
 	struct timeval exec_time;
 	
 	gettimeofday(&exec_time, NULL);
-	print_philo(philo, END, exec_time);
+	print_philo(i_philo, END, start_time, exec_time);
 }
 
-static int	decrease_philo_ttpe(t_philo *philos)
+static int	decrease_philo_ttpe(t_philo philo)
 {
 	uint	i;
 	uint	num_of_philo;
 
 	i = 0;
-	num_of_philo = philos[0].opt.nop;
+	num_of_philo = philo.opt->nop;
 	while (i < num_of_philo)
 	{
-		philos[i].ttpe -= 10;
-		if (philos[i].ttpe <= 0)
+		if (philo.infos[i].ttpe <= 10)
 		{
-			starve_philo(philos[i]);
+			starve_philo(i, philo.opt->time);
 			return (0);
 		}
+		philo.infos[i].ttpe -= 10;
 		i++;
 	}
 	return (1);
 }
 
-void	handle_monitoring(t_philo *philos)
+void	handle_monitoring(t_philo philo)
 {
 	while (1)
 	{
 		usleep(10000);
-		if (!decrease_philo_ttpe(philos))
+		if (!decrease_philo_ttpe(philo))
 			break ;
 	}
+	handle_philo_end(philo);
 }

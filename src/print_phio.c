@@ -12,16 +12,13 @@
 
 #include "../inc/ft_philo.h"
 
-static void	print_philo_stat(uint i_philo, uint time_stamp, t_routine_code code)
+static int	print_philo_stat(pthread_mutex_t *print_mutex, uint i_philo, uint time_stamp, t_routine_code code)
 {
-	static pthread_mutex_t *print_mutext;
+	static uint	end_flag;
 
-	if (print_mutext == NULL)
-	{
-		print_mutext = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * 1);
-		pthread_mutex_init(print_mutext, NULL);
-	}
-	pthread_mutex_lock(print_mutext);
+	if (end_flag == 1)
+		return (0);
+	pthread_mutex_lock(print_mutex);
 	if (code == TAKE_FORK)
 		printf("%5u %u has taken a fork\n", time_stamp, i_philo);
 	if (code == EAT)
@@ -33,19 +30,29 @@ static void	print_philo_stat(uint i_philo, uint time_stamp, t_routine_code code)
 	if (code == END)
 	{
 		printf("%5u %u is died\n", time_stamp, i_philo);
-		free(print_mutext);
+		end_flag = 1;
+		return (0);
 	}
-	pthread_mutex_unlock(print_mutext);
+	pthread_mutex_unlock(print_mutex);
+	return (1);
 }
 
-uint	print_philo(t_philo philo, t_routine_code code, struct timeval exec_time)
+uint	print_philo(uint i_philo, t_routine_code code, \
+					struct timeval start_time, struct timeval exec_time)
 {
+	static pthread_mutex_t *print_mutex;
 	struct timeval			gep_time;
 	uint					time_stamp;
 
-	gep_time.tv_sec = exec_time.tv_sec - philo.opt.time.tv_sec;
-	gep_time.tv_usec = exec_time.tv_usec - philo.opt.time.tv_usec;
+	if (print_mutex == NULL)
+	{
+		print_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * 1);
+		pthread_mutex_init(print_mutex, NULL);
+	}
+	gep_time.tv_sec = exec_time.tv_sec - start_time.tv_sec;
+	gep_time.tv_usec = exec_time.tv_usec - start_time.tv_usec;
 	time_stamp = gep_time.tv_sec * 1000 + gep_time.tv_usec / 1000;
-	print_philo_stat(philo.i, time_stamp, code);
+	if (!print_philo_stat(print_mutex, i_philo, time_stamp, code))
+		free(print_mutex);
 	return (time_stamp);
 }

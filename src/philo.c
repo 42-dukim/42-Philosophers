@@ -12,29 +12,43 @@
 
 #include "../inc/ft_philo.h"
 
-t_philo	*create_philos(t_philo_opt	opt, pthread_mutex_t *forks)
+t_philo_info	*create_philo_infos(t_philo_opt opt, pthread_mutex_t *forks)
 {
-	pthread_t		*philo_threads;
-	t_philo			*philos;
+	pthread_t		*threads;
+	t_philo_info	*infos;
 	uint			i;
 
-	philo_threads = (pthread_t *)malloc(sizeof(pthread_t) * opt.nop);
-	philos = (t_philo *)malloc(sizeof(t_philo) * opt.nop);
+	threads = (pthread_t *)malloc(sizeof(pthread_t) * opt.nop);
+	infos = (t_philo_info *)malloc(sizeof(t_philo_info) * opt.nop);
 	i = 0;
 	while (i < opt.nop)
 	{
-		philos[i].i = i;
-		philos[i].ttpe = opt.ttd;
-		philos[i].forks = forks;
-		philos[i].opt = opt;
-		if (pthread_create(&philo_threads[i], NULL, &routine, &philos[i]))
-		{
-			free(philo_threads);
-			free(philos);
-			return (NULL);
-		}
-		philos[i].thread = philo_threads[i];
+		infos[i].i = i;
+		infos[i].ttpe = opt.ttd;
+		infos[i].thread = threads[i];
+		infos[i].my_fork = (t_fork *)malloc(sizeof(t_fork) * 1);
+		infos[i].my_fork->right = &(forks[i % opt.nop]);
+		infos[i].my_fork->left = &(forks[(i + 1) % opt.nop]);
 		i++;
 	}
-	return (philos);
+	return (infos);
+}
+
+int	start_philo_routine(t_philo philo)
+{
+	t_philo_arg	*arg;
+	uint		i;
+	
+	i = 0;
+	while (i < philo.opt->nop)
+	{
+		arg = (t_philo_arg *)malloc(sizeof(t_philo_arg) * 1);
+		if (!arg)
+			(i + 1);
+		arg->opt = philo.opt;
+		arg->info = &(philo.infos[i]);
+		if (pthread_create(&(arg->info->thread), NULL, &routine, &arg))
+			return (i + 1);
+	}
+	return (0);
 }

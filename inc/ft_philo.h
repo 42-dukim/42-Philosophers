@@ -22,6 +22,21 @@
 
 typedef unsigned int	uint;
 
+typedef enum e_bool
+{ 
+	false = 0,
+	true 
+}	t_bool;
+
+typedef enum e_routine_code
+{
+	TAKE_FORK = 0,
+	EAT,
+	SLEEP,
+	THINK,
+	END
+}				t_routine_code;
+
 typedef struct s_philo_option
 {
 	uint			nop;
@@ -37,6 +52,8 @@ typedef struct s_fork
 {
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
+	t_bool			left_taken;
+	t_bool			right_taken;
 }					t_fork;
 
 typedef struct s_philo_information
@@ -60,21 +77,12 @@ typedef struct s_philo_argument
 	t_philo_info	*info;
 }					t_philo_arg;
 
-typedef enum e_routine_code
-{
-	TAKE_FORK = 0,
-	EAT,
-	SLEEP,
-	THINK,
-	END
-}				t_routine_code;
-
 t_philo_opt		*parse_arg_to_philo_opt(int argc, char *argv[]);
 t_philo_info	*create_philo_infos(t_philo_opt opt, pthread_mutex_t *forks);
 int				start_philo_routine(t_philo philo);
 pthread_mutex_t	*create_forks(uint num_of_philo);
 void			*routine(void *opt);
-uint			print_philo(uint i_philo, t_routine_code code, \
+t_bool			print_philo(uint i_philo, t_routine_code code, \
 								struct timeval start_time, struct timeval exec_time);
 void			handle_monitoring(t_philo philos);
 void			handle_philo_end(t_philo philo);

@@ -12,56 +12,69 @@
 
 #include "../inc/ft_philo.h"
 
-static int	ph_take_fork(t_philo_arg *philo_arg)
+static t_bool	ph_take_fork(t_philo_arg *philo_arg)
 {
 	uint			i_philo;
-	t_fork			my_fork;
+	t_fork			*my_fork;
 	struct timeval	start_time;
 	struct timeval	exec_time;
 	
 	i_philo = philo_arg->info->i;
-	my_fork = philo_arg->info->my_fork;
+	my_fork = &(philo_arg->info->my_fork);
 	start_time = philo_arg->opt->time;
 	if (i_philo % 2)
 	{	
-		pthread_mutex_lock(my_fork.left);
+		pthread_mutex_lock(my_fork->left);
+		my_fork->left_taken = true;
 		gettimeofday(&exec_time, NULL);
-		print_philo(i_philo, TAKE_FORK, start_time, exec_time);
-		pthread_mutex_lock(my_fork.right);
+		if (print_philo(i_philo, TAKE_FORK, start_time, exec_time))
+			return (true);
+		pthread_mutex_lock(my_fork->right);
+		my_fork->right_taken = true;
 		gettimeofday(&exec_time, NULL);
-		print_philo(i_philo, TAKE_FORK, start_time, exec_time);
+		if (print_philo(i_philo, TAKE_FORK, start_time, exec_time))
+			return (false);
 	}
 	else
 	{
-		pthread_mutex_lock(my_fork.right);
+		pthread_mutex_lock(my_fork->right);
+		my_fork->right_taken = true;
 		gettimeofday(&exec_time, NULL);
-		print_philo(i_philo, TAKE_FORK, start_time, exec_time);
-		pthread_mutex_lock(my_fork.left);
+		if (print_philo(i_philo, TAKE_FORK, start_time, exec_time))
+			return (true);
+		pthread_mutex_lock(my_fork->left);
+		my_fork->left_taken = true;
 		gettimeofday(&exec_time, NULL);
-		print_philo(i_philo, TAKE_FORK, start_time, exec_time);
+		if (print_philo(i_philo, TAKE_FORK, start_time, exec_time))
+			return (true);
 	}
+	return (false);
 }
 
-static int	ph_eat(t_philo_arg *philo_arg)
+static t_bool	ph_eat(t_philo_arg *philo_arg)
 {
 	uint			i_philo;
-	t_fork			my_fork;
+	t_fork			*my_fork;
 	struct timeval	start_time;
 	struct timeval	exec_time;
 	
 	i_philo = philo_arg->info->i;
-	my_fork = philo_arg->info->my_fork;
+	my_fork = &(philo_arg->info->my_fork);
 	start_time = philo_arg->opt->time;
 	gettimeofday(&exec_time, NULL);
-	print_philo(i_philo, EAT, start_time, exec_time);
+	if (print_philo(i_philo, EAT, start_time, exec_time))
+		return (true);
 	// TODO:ttpe를 mutex로 lock 걸어 모니터링시 함부로 못 죽이게!
 	usleep(philo_arg->opt->tte * 1000);
 	philo_arg->info->ttpe = philo_arg->opt->ttd;
-	pthread_mutex_unlock(my_fork.right);
-	pthread_mutex_unlock(my_fork.left);
+	pthread_mutex_unlock(my_fork->right);
+	pthread_mutex_unlock(my_fork->left);
+	my_fork->right_taken = false;
+	my_fork->left_taken = false;
+	return (false);
 }
 
-static int	ph_sleep(t_philo_arg *philo_arg)
+static t_bool	ph_sleep(t_philo_arg *philo_arg)
 {
 	uint			i_philo;
 	struct timeval	start_time;
@@ -70,35 +83,51 @@ static int	ph_sleep(t_philo_arg *philo_arg)
 	i_philo = philo_arg->info->i;
 	start_time = philo_arg->opt->time;
 	gettimeofday(&exec_time, NULL);
-	print_philo(i_philo, SLEEP, start_time, exec_time);
+	if (print_philo(i_philo, SLEEP, start_time, exec_time))
+		return (true);
 	usleep(philo_arg->opt->tts * 1000);
-	return (0);
+	return (false);
 }
 
-static int	ph_think(t_philo_arg *philo_arg)
+static t_bool	ph_think(t_philo_arg *philo_arg)
 {
 	struct timeval	start_time;
 	struct timeval exec_time;
 
 	start_time = philo_arg->opt->time;
 	gettimeofday(&exec_time, NULL);
-	print_philo(philo_arg->info->i, THINK, start_time, exec_time);
+	if (print_philo(philo_arg->info->i, THINK, start_time, exec_time))
+		return (true);
+	return (false);
 }
 
 void	*routine(void *arg)
 {
-	uint		i_philo;
 	t_philo_arg	*philo_arg;
+	uint		i_philo;
+	t_fork		*my_fork;
 
 	philo_arg = (t_philo_arg *)arg;
 	i_philo = philo_arg->info->i;
+	my_fork = &(philo_arg->info->my_fork);
 	if (i_philo % 2)
 		usleep(1000);
 	while (1)
 	{
-		ph_take_fork(philo_arg);
-		ph_eat(philo_arg);
-		ph_sleep(philo_arg);
-		ph_think(philo_arg);
+		if (ph_take_fork(philo_arg))
+			break ;
+		if (ph_eat(philo_arg))
+			break ;
+		if (ph_sleep(philo_arg))
+			break ;
+		if (ph_think(philo_arg))
+			break ;
 	}
+	if (my_fork->left_taken)
+		pthread_mutex_unlock(my_fork->left);
+	if (my_fork->right_taken)
+		pthread_mutex_unlock(my_fork->right);
+	my_fork->left_taken = false;
+	my_fork->right_taken = false;
+	return NULL;
 }

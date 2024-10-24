@@ -26,8 +26,10 @@ t_philo_info	*create_philo_infos(t_philo_opt opt, pthread_mutex_t *forks)
 		infos[i].i = i;
 		infos[i].ttpe = opt.ttd;
 		infos[i].thread = threads[i];
-		infos[i].my_fork.right = &(forks[i % opt.nop]);
 		infos[i].my_fork.left = &(forks[(i + 1) % opt.nop]);
+		infos[i].my_fork.right = &(forks[i % opt.nop]);
+		infos[i].my_fork.left_taken = false;
+		infos[i].my_fork.right_taken = false;
 		i++;
 	}
 	return (infos);

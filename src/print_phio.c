@@ -12,12 +12,8 @@
 
 #include "../inc/ft_philo.h"
 
-static int	print_philo_stat(pthread_mutex_t *print_mutex, uint i_philo, uint time_stamp, t_routine_code code)
+static t_bool	print_philo_stat(pthread_mutex_t *print_mutex, uint i_philo, uint time_stamp, t_routine_code code)
 {
-	static uint	end_flag;
-
-	if (end_flag == 1)
-		return (0);
 	pthread_mutex_lock(print_mutex);
 	if (code == TAKE_FORK)
 		printf("%5u %u has taken a fork\n", time_stamp, i_philo);
@@ -30,20 +26,23 @@ static int	print_philo_stat(pthread_mutex_t *print_mutex, uint i_philo, uint tim
 	if (code == END)
 	{
 		printf("%5u %u is died\n", time_stamp, i_philo);
-		end_flag = 1;
-		return (0);
+		pthread_mutex_unlock(print_mutex);
+		return (true);
 	}
 	pthread_mutex_unlock(print_mutex);
-	return (1);
+	return (false);
 }
 
-uint	print_philo(uint i_philo, t_routine_code code, \
+t_bool	print_philo(uint i_philo, t_routine_code code, \
 					struct timeval start_time, struct timeval exec_time)
 {
 	static pthread_mutex_t *print_mutex;
+	static t_bool			end_flag;
 	struct timeval			gep_time;
 	uint					time_stamp;
 
+	if (end_flag == true)
+		return (true);
 	if (print_mutex == NULL)
 	{
 		print_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * 1);
@@ -52,7 +51,12 @@ uint	print_philo(uint i_philo, t_routine_code code, \
 	gep_time.tv_sec = exec_time.tv_sec - start_time.tv_sec;
 	gep_time.tv_usec = exec_time.tv_usec - start_time.tv_usec;
 	time_stamp = gep_time.tv_sec * 1000 + gep_time.tv_usec / 1000;
-	if (!print_philo_stat(print_mutex, i_philo, time_stamp, code))
+	if (print_philo_stat(print_mutex, i_philo, time_stamp, code))
+	{
+		end_flag = true;
+		pthread_mutex_destroy(print_mutex);
 		free(print_mutex);
-	return (time_stamp);
+		return (true);
+	}
+	return (false);
 }

@@ -129,5 +129,6 @@ void	*routine(void *arg)
 		pthread_mutex_unlock(my_fork->right);
 	my_fork->left_taken = false;
 	my_fork->right_taken = false;
+	free(philo_arg);
 	return NULL;
 }

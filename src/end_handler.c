@@ -14,14 +14,21 @@
 
 void	handle_philo_end(t_philo philo)
 {
-	uint    i;
+	uint	i;
 
-	// i = 0;
-	// while (i < nop)
-	// {
-	// 	pthread_mutex_destroy(&philos[0].forks[i]);
-	// 	i++;
-	// }
-	// free(philo.infos);
-	// free(philo.forks);
+	i = 0;
+	while (i < philo.opt->nop)
+	{
+		pthread_mutex_destroy(&(philo.forks[i]));
+		i++;
+	}
+	while (i > 0)
+	{
+		i--;
+		pthread_join(philo.threads[i], NULL);
+	}
+	free(philo.threads);
+	free(philo.forks);
+	free(philo.infos);
+	free(philo.opt);
 }

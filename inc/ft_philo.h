@@ -44,7 +44,7 @@ typedef struct s_philo_information
 	uint			i;
 	uint			ttpe;			// time to pre eat
 	pthread_t		thread;
-	t_fork			*my_fork;
+	t_fork			my_fork;
 }					t_philo_info;
 
 typedef struct s_philo

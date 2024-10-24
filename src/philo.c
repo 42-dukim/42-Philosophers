@@ -26,9 +26,8 @@ t_philo_info	*create_philo_infos(t_philo_opt opt, pthread_mutex_t *forks)
 		infos[i].i = i;
 		infos[i].ttpe = opt.ttd;
 		infos[i].thread = threads[i];
-		infos[i].my_fork = (t_fork *)malloc(sizeof(t_fork) * 1);
-		infos[i].my_fork->right = &(forks[i % opt.nop]);
-		infos[i].my_fork->left = &(forks[(i + 1) % opt.nop]);
+		infos[i].my_fork.right = &(forks[i % opt.nop]);
+		infos[i].my_fork.left = &(forks[(i + 1) % opt.nop]);
 		i++;
 	}
 	return (infos);
@@ -47,8 +46,9 @@ int	start_philo_routine(t_philo philo)
 			(i + 1);
 		arg->opt = philo.opt;
 		arg->info = &(philo.infos[i]);
-		if (pthread_create(&(arg->info->thread), NULL, &routine, &arg))
+		if (pthread_create(&(arg->info->thread), NULL, &routine, arg))
 			return (i + 1);
+		i++;
 	}
 	return (0);
 }

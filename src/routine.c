@@ -15,7 +15,7 @@
 static int	ph_take_fork(t_philo_arg *philo_arg)
 {
 	uint			i_philo;
-	t_fork			*my_fork;
+	t_fork			my_fork;
 	struct timeval	start_time;
 	struct timeval	exec_time;
 	
@@ -24,19 +24,19 @@ static int	ph_take_fork(t_philo_arg *philo_arg)
 	start_time = philo_arg->opt->time;
 	if (i_philo % 2)
 	{	
-		pthread_mutex_lock(my_fork->left);
+		pthread_mutex_lock(my_fork.left);
 		gettimeofday(&exec_time, NULL);
 		print_philo(i_philo, TAKE_FORK, start_time, exec_time);
-		pthread_mutex_lock(my_fork->right);
+		pthread_mutex_lock(my_fork.right);
 		gettimeofday(&exec_time, NULL);
 		print_philo(i_philo, TAKE_FORK, start_time, exec_time);
 	}
 	else
 	{
-		pthread_mutex_lock(my_fork->right);
+		pthread_mutex_lock(my_fork.right);
 		gettimeofday(&exec_time, NULL);
 		print_philo(i_philo, TAKE_FORK, start_time, exec_time);
-		pthread_mutex_lock(my_fork->left);
+		pthread_mutex_lock(my_fork.left);
 		gettimeofday(&exec_time, NULL);
 		print_philo(i_philo, TAKE_FORK, start_time, exec_time);
 	}
@@ -45,7 +45,7 @@ static int	ph_take_fork(t_philo_arg *philo_arg)
 static int	ph_eat(t_philo_arg *philo_arg)
 {
 	uint			i_philo;
-	t_fork			*my_fork;
+	t_fork			my_fork;
 	struct timeval	start_time;
 	struct timeval	exec_time;
 	
@@ -57,8 +57,8 @@ static int	ph_eat(t_philo_arg *philo_arg)
 	// TODO:ttpe를 mutex로 lock 걸어 모니터링시 함부로 못 죽이게!
 	usleep(philo_arg->opt->tte * 1000);
 	philo_arg->info->ttpe = philo_arg->opt->ttd;
-	pthread_mutex_unlock(my_fork->left);
-	pthread_mutex_unlock(my_fork->right);
+	pthread_mutex_unlock(my_fork.right);
+	pthread_mutex_unlock(my_fork.left);
 }
 
 static int	ph_sleep(t_philo_arg *philo_arg)

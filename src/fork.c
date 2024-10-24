@@ -23,12 +23,13 @@ pthread_mutex_t	*create_forks(uint num_of_philo)
 	i = 0;
 	while (i < num_of_philo)
 	{
-		// if (pthread_mutex_init(&forks[i], NULL));
-		// {
-		// 	free(forks);
-		// 	return (NULL);
-		// }
-		pthread_mutex_init(&forks[i], NULL);
+		if (pthread_mutex_init(&forks[i], NULL) == -1)
+		{
+			while (i > 0)
+				pthread_mutex_destroy(&forks[--i]);
+			free(forks);
+			return (NULL);
+		}
 		i++;
 	}
 	return (forks);

@@ -33,13 +33,10 @@ static t_bool	print_philo_stat(pthread_mutex_t *print_mutex, uint i_philo, uint 
 	return (false);
 }
 
-t_bool	print_philo(uint i_philo, t_routine_code code, \
-					struct timeval start_time, struct timeval exec_time)
+t_bool	print_philo(uint i_philo, t_routine_code code, uint time_stamp)
 {
 	static pthread_mutex_t *print_mutex;
 	static t_bool			end_flag;
-	struct timeval			gep_time;
-	uint					time_stamp;
 
 	if (end_flag == true)
 		return (true);
@@ -48,9 +45,6 @@ t_bool	print_philo(uint i_philo, t_routine_code code, \
 		print_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * 1);
 		pthread_mutex_init(print_mutex, NULL);
 	}
-	gep_time.tv_sec = exec_time.tv_sec - start_time.tv_sec;
-	gep_time.tv_usec = exec_time.tv_usec - start_time.tv_usec;
-	time_stamp = gep_time.tv_sec * 1000 + gep_time.tv_usec / 1000;
 	if (print_philo_stat(print_mutex, i_philo, time_stamp, code))
 	{
 		end_flag = true;

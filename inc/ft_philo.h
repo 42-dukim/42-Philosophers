@@ -35,7 +35,7 @@ typedef enum e_routine_code
 	SLEEP,
 	THINK,
 	END
-}				t_routine_code;
+}	t_routine_code;
 
 typedef struct s_philo_option
 {
@@ -63,6 +63,12 @@ typedef struct s_philo_information
 	t_fork			my_fork;
 }					t_philo_info;
 
+typedef struct s_philo_argument
+{
+	t_philo_opt		*opt;
+	t_philo_info	*info;
+}					t_philo_arg;
+
 typedef struct s_philo
 {
 	t_philo_opt		*opt;
@@ -71,20 +77,16 @@ typedef struct s_philo
 	pthread_t		*threads;
 }					t_philo;
 
-typedef struct s_philo_argument
-{
-	t_philo_opt		*opt;
-	t_philo_info	*info;
-}					t_philo_arg;
+void		parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo);
+void		create_forks(t_philo *philo);
+void		create_philo_infos(t_philo *philo);
+t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[]);
 
-t_philo_opt		*parse_arg_to_philo_opt(int argc, char *argv[]);
-t_philo_info	*create_philo_infos(t_philo_opt opt, pthread_mutex_t *forks);
-int				start_philo_routine(t_philo philo);
-pthread_mutex_t	*create_forks(uint num_of_philo);
-void			*routine(void *opt);
-t_bool			print_philo(uint i_philo, t_routine_code code, \
-								struct timeval start_time, struct timeval exec_time);
-void			handle_monitoring(t_philo philos);
-void			handle_philo_end(t_philo philo);
+void		*routine(void *opt);
+t_bool		print_philo(uint i_philo, t_routine_code code, \
+						struct timeval start_time, struct timeval exec_time);
+
+void		handle_monitoring(t_philo *philo, t_philo_arg *arg);
+void		handle_philo_end(t_philo *philo, t_philo_arg *arg, t_bool is_success);
 
 #endif

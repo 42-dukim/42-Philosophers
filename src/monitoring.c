@@ -20,27 +20,27 @@ static void	starve_philo(uint i_philo, struct timeval start_time)
 	print_philo(i_philo, END, start_time, exec_time);
 }
 
-static int	decrease_philo_ttpe(t_philo philo)
+static t_bool	decrease_philo_ttpe(t_philo *philo)
 {
 	uint	i;
 	uint	num_of_philo;
 
 	i = 0;
-	num_of_philo = philo.opt->nop;
+	num_of_philo = philo->opt->nop;
 	while (i < num_of_philo)
 	{
-		if (philo.infos[i].ttpe <= 10)
+		if (philo->infos[i].ttpe <= 10)
 		{
-			starve_philo(i, philo.opt->time);
-			return (0);
+			starve_philo(i, philo->opt->time);
+			return (false);
 		}
-		philo.infos[i].ttpe -= 10;
+		philo->infos[i].ttpe -= 10;
 		i++;
 	}
-	return (1);
+	return (true);
 }
 
-void	handle_monitoring(t_philo philo)
+void	handle_monitoring(t_philo *philo, t_philo_arg *arg)
 {
 	while (1)
 	{
@@ -48,5 +48,5 @@ void	handle_monitoring(t_philo philo)
 		if (!decrease_philo_ttpe(philo))
 			break ;
 	}
-	handle_philo_end(philo);
+	handle_philo_end(philo, arg, true);
 }

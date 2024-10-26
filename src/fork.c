@@ -12,25 +12,24 @@
 
 #include "../inc/ft_philo.h"
 
-pthread_mutex_t	*create_forks(uint num_of_philo)
+void	create_forks(t_philo *philo)
 {
-	pthread_mutex_t	*forks;
 	uint			i;
 
-	forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * num_of_philo);
-	if (!forks)
-		return (NULL);
+	if (!philo->opt)
+		return ;
+	philo->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * philo->opt->nop);
+	if (!philo->forks)
+		return ;
 	i = 0;
-	while (i < num_of_philo)
+	while (i < philo->opt->nop)
 	{
-		if (pthread_mutex_init(&forks[i], NULL) == -1)
+		if (pthread_mutex_init(&philo->forks[i], NULL) == -1)
 		{
 			while (i > 0)
-				pthread_mutex_destroy(&forks[--i]);
-			free(forks);
-			return (NULL);
+				pthread_mutex_destroy(&philo->forks[--i]);
+			return ;
 		}
 		i++;
 	}
-	return (forks);
 }

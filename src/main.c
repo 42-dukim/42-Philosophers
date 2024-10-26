@@ -15,17 +15,15 @@
 int	main(int argc, char *argv[])
 {
 	t_philo			philo;
-	uint			i;
-	
+	t_philo_arg		*arg;
+
 	if (argc < 5 || argc > 6)
 		return (0);
-	philo.opt = parse_arg_to_philo_opt(argc, argv);
-	philo.threads = (pthread_t *)malloc(sizeof(pthread_t) * philo.opt->nop);
-	philo.forks = create_forks(philo.opt->nop);
-	if (!philo.forks)
+	arg = start_philo_routine(&philo, argc, argv);
+	if (!arg)
+	{
+		handle_philo_end(&philo, arg, false);
 		return (0);
-	philo.infos = create_philo_infos(*(philo.opt), philo.forks);
-	if (start_philo_routine(philo))
-		return (0);
-	handle_monitoring(philo);
+	}
+	handle_monitoring(&philo, arg);
 }

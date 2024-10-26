@@ -12,42 +12,49 @@
 
 #include "../inc/ft_philo.h"
 
-t_philo_info	*create_philo_infos(t_philo_opt opt, pthread_mutex_t *forks)
+void	create_philo_infos(t_philo *philo)
 {
-	t_philo_info	*infos;
 	uint			i;
 
-	infos = (t_philo_info *)malloc(sizeof(t_philo_info) * opt.nop);
+	if (!philo->forks)
+		return ;
+	philo->infos = (t_philo_info *)malloc(sizeof(t_philo_info) * philo->opt->nop);
+	if (!philo->infos)
+		return ;
 	i = 0;
-	while (i < opt.nop)
+	while (i < philo->opt->nop)
 	{
-		infos[i].i = i;
-		infos[i].ttpe = opt.ttd;
-		infos[i].my_fork.left = &(forks[(i + 1) % opt.nop]);
-		infos[i].my_fork.right = &(forks[i % opt.nop]);
-		infos[i].my_fork.left_taken = false;
-		infos[i].my_fork.right_taken = false;
+		philo->infos[i].i = i;
+		philo->infos[i].ttpe = philo->opt->ttd;
+		philo->infos[i].my_fork.left = &(philo->forks[(i + 1) % philo->opt->nop]);
+		philo->infos[i].my_fork.right = &(philo->forks[i % philo->opt->nop]);
+		philo->infos[i].my_fork.left_taken = false;
+		philo->infos[i].my_fork.right_taken = false;
 		i++;
 	}
-	return (infos);
 }
 
-int	start_philo_routine(t_philo philo)
+t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[])
 {
 	t_philo_arg	*arg;
 	uint		i;
 	
+	parse_arg_to_philo_opt(argc, argv, philo);
+	create_forks(philo);
+	create_philo_infos(philo);
+	philo->threads = (pthread_t *)malloc(sizeof(pthread_t) * philo->opt->nop);
+	arg = (t_philo_arg *)malloc(sizeof(t_philo_arg) * philo->opt->nop);
+	if (!philo->opt || !philo->forks || !philo->infos || !philo->threads || !arg)
+		return (NULL);
 	i = 0;
-	while (i < philo.opt->nop)
+	while (i < philo->opt->nop)
 	{
-		arg = (t_philo_arg *)malloc(sizeof(t_philo_arg) * 1);
-		if (!arg)
-			(i + 1);
-		arg->opt = philo.opt;
-		arg->info = &(philo.infos[i]);
-		if (pthread_create(&(philo.threads[i]), NULL, routine, arg))
-			return (i + 1);
+		arg[i].opt = philo->opt;
+		arg[i].info = &(philo->infos[i]);
+		if (pthread_create(&(philo->threads[i]), NULL, routine, &arg[i]))
+			return (NULL);
+		pthread_detach(philo->threads[i]);
 		i++;
 	}
-	return (0);
+	return (arg);
 }

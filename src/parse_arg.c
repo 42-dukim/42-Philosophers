@@ -49,4 +49,5 @@ void	parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo)
 	gettimeofday(&(philo->opt->time), NULL);
 	if (argc == 6)
 		philo->opt->nme = ft_atoi(argv[5]);
+	philo->opt->nosp = philo->opt->nop;
 }

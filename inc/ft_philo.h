@@ -34,6 +34,7 @@ typedef enum e_routine_code
 	EAT,
 	SLEEP,
 	THINK,
+	DIED,
 	END
 }	t_routine_code;
 
@@ -45,7 +46,7 @@ typedef struct s_philo_option
 	uint			tts;
 	uint			nme;
 	struct timeval	time;
-	uint			end_flag;
+	uint			nosp;			// nom of survive philo
 }					t_philo_opt;
 
 typedef struct s_fork
@@ -60,6 +61,7 @@ typedef struct s_philo_information
 {
 	uint			i;
 	uint			ttpe;			// time to pre eat
+	uint			nme;
 	t_fork			my_fork;
 }					t_philo_info;
 
@@ -77,14 +79,15 @@ typedef struct s_philo
 	pthread_t		*threads;
 }					t_philo;
 
+uint		get_geptime_ms(struct timeval start_time);
+
 void		parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo);
 void		create_forks(t_philo *philo);
 void		create_philo_infos(t_philo *philo);
 t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[]);
 
 void		*routine(void *opt);
-t_bool		print_philo(uint i_philo, t_routine_code code, \
-						struct timeval start_time, struct timeval exec_time);
+t_bool		print_philo(uint i_philo, t_routine_code code, uint time_stamp);
 
 void		handle_monitoring(t_philo *philo, t_philo_arg *arg);
 void		handle_philo_end(t_philo *philo, t_philo_arg *arg, t_bool is_success);

@@ -26,6 +26,7 @@ void	create_philo_infos(t_philo *philo)
 	{
 		philo->infos[i].i = i;
 		philo->infos[i].ttpe = philo->opt->ttd;
+		philo->infos[i].nme = 0;
 		philo->infos[i].my_fork.left = &(philo->forks[(i + 1) % philo->opt->nop]);
 		philo->infos[i].my_fork.right = &(philo->forks[i % philo->opt->nop]);
 		philo->infos[i].my_fork.left_taken = false;
@@ -53,7 +54,6 @@ t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[])
 		arg[i].info = &(philo->infos[i]);
 		if (pthread_create(&(philo->threads[i]), NULL, routine, &arg[i]))
 			return (NULL);
-		pthread_detach(philo->threads[i]);
 		i++;
 	}
 	return (arg);

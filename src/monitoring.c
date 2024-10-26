@@ -12,15 +12,7 @@
 
 #include "../inc/ft_philo.h"
 
-static void	starve_philo(uint i_philo, struct timeval start_time)
-{
-	struct timeval exec_time;
-	
-	gettimeofday(&exec_time, NULL);
-	print_philo(i_philo, END, start_time, exec_time);
-}
-
-static t_bool	decrease_philo_ttpe(t_philo *philo)
+static t_bool	decrease_philo_ttpe(t_philo *philo, uint gep_time)
 {
 	uint	i;
 	uint	num_of_philo;
@@ -29,12 +21,12 @@ static t_bool	decrease_philo_ttpe(t_philo *philo)
 	num_of_philo = philo->opt->nop;
 	while (i < num_of_philo)
 	{
-		if (philo->infos[i].ttpe <= 10)
+		if (philo->infos[i].ttpe <= gep_time)
 		{
-			starve_philo(i, philo->opt->time);
+			print_philo(i, DIED, get_geptime_ms(philo->opt->time));
 			return (false);
 		}
-		philo->infos[i].ttpe -= 10;
+		philo->infos[i].ttpe -= gep_time;
 		i++;
 	}
 	return (true);
@@ -42,11 +34,15 @@ static t_bool	decrease_philo_ttpe(t_philo *philo)
 
 void	handle_monitoring(t_philo *philo, t_philo_arg *arg)
 {
-	while (1)
+	struct timeval pre_time;
+	
+	pre_time = philo->opt->time;
+	while (philo->opt->nosp)
 	{
-		usleep(10000);
-		if (!decrease_philo_ttpe(philo))
+		usleep(1000);
+		if (!decrease_philo_ttpe(philo, get_geptime_ms(pre_time)))
 			break ;
+		gettimeofday(&pre_time, NULL);
 	}
 	handle_philo_end(philo, arg, true);
 }

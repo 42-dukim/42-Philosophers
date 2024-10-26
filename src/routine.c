@@ -30,7 +30,7 @@ static t_bool	ph_take_fork(t_philo_arg *philo_arg)
 		pthread_mutex_lock(my_fork->right);
 		my_fork->right_taken = true;
 		if (print_philo(i_philo, TAKE_FORK, get_geptime_ms(start_time)))
-			return (false);
+			return (true);
 	}
 	else
 	{
@@ -60,10 +60,13 @@ static t_bool	ph_eat(t_philo_arg *philo_arg)
 	// TODO:ttpe를 mutex로 lock 걸어 모니터링시 함부로 못 죽이게!
 	usleep(philo_arg->opt->tte * 1000);
 	philo_arg->info->ttpe = philo_arg->opt->ttd;
+	philo_arg->info->nme += 1;
 	pthread_mutex_unlock(my_fork->right);
 	pthread_mutex_unlock(my_fork->left);
 	my_fork->right_taken = false;
 	my_fork->left_taken = false;
+	if (philo_arg->info->nme == philo_arg->opt->nme)
+		return (true);
 	return (false);
 }
 
@@ -118,5 +121,6 @@ void	*routine(void *arg)
 		pthread_mutex_unlock(my_fork->right);
 	my_fork->left_taken = false;
 	my_fork->right_taken = false;
+	philo_arg->opt->nosp--;
 	return NULL;
 }

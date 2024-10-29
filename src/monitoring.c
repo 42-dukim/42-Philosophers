@@ -12,6 +12,17 @@
 
 #include "../inc/ft_philo.h"
 
+static void	died_philo(uint i_philo, t_fork *my_fork, uint time_stamp)
+{
+	print_philo(i_philo, DIED, time_stamp);
+	if (my_fork->left_taken)
+		pthread_mutex_unlock(my_fork->left);
+	if (my_fork->right_taken)
+		pthread_mutex_unlock(my_fork->right);
+	my_fork->left_taken = false;
+	my_fork->right_taken = false;
+}
+
 static t_bool	decrease_philo_ttpe(t_philo *philo, uint gep_time)
 {
 	uint	i;
@@ -23,7 +34,7 @@ static t_bool	decrease_philo_ttpe(t_philo *philo, uint gep_time)
 	{
 		if (philo->infos[i].ttpe <= gep_time)
 		{
-			print_philo(i, DIED, get_geptime_ms(philo->opt->time));
+			died_philo(i, &(philo->infos[i].my_fork), get_geptime_ms(philo->opt->time));
 			return (false);
 		}
 		philo->infos[i].ttpe -= gep_time;

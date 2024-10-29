@@ -17,7 +17,7 @@ static t_bool	ph_take_fork(t_philo_arg *philo_arg)
 	uint			i_philo;
 	t_fork			*my_fork;
 	struct timeval	start_time;
-	
+
 	i_philo = philo_arg->info->i;
 	my_fork = &(philo_arg->info->my_fork);
 	start_time = philo_arg->opt->time;
@@ -31,18 +31,16 @@ static t_bool	ph_take_fork(t_philo_arg *philo_arg)
 		my_fork->right_taken = true;
 		if (print_philo(i_philo, TAKE_FORK, get_geptime_ms(start_time)))
 			return (true);
+		return (false);
 	}
-	else
-	{
-		pthread_mutex_lock(my_fork->right);
-		my_fork->right_taken = true;
-		if (print_philo(i_philo, TAKE_FORK, get_geptime_ms(start_time)))
-			return (true);
-		pthread_mutex_lock(my_fork->left);
-		my_fork->left_taken = true;
-		if (print_philo(i_philo, TAKE_FORK, get_geptime_ms(start_time)))
-			return (true);
-	}
+	pthread_mutex_lock(my_fork->right);
+	my_fork->right_taken = true;
+	if (print_philo(i_philo, TAKE_FORK, get_geptime_ms(start_time)))
+		return (true);
+	pthread_mutex_lock(my_fork->left);
+	my_fork->left_taken = true;
+	if (print_philo(i_philo, TAKE_FORK, get_geptime_ms(start_time)))
+		return (true);
 	return (false);
 }
 

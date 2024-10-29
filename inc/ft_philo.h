@@ -79,7 +79,7 @@ typedef struct s_philo
 	pthread_t		*threads;
 }					t_philo;
 
-uint		get_geptime_ms(struct timeval start_time);
+uint		get_timegap_ms(struct timeval start_time);
 
 void		parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo);
 void		create_forks(t_philo *philo);

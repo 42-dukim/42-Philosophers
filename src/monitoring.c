@@ -34,7 +34,7 @@ static t_bool	decrease_philo_ttpe(t_philo *philo, uint gep_time)
 	{
 		if (philo->infos[i].ttpe <= gep_time)
 		{
-			died_philo(i, &(philo->infos[i].my_fork), get_geptime_ms(philo->opt->time));
+			died_philo(i, &(philo->infos[i].my_fork), get_timegap_ms(philo->opt->time));
 			return (false);
 		}
 		philo->infos[i].ttpe -= gep_time;
@@ -51,7 +51,7 @@ void	handle_monitoring(t_philo *philo, t_philo_arg *arg)
 	while (philo->opt->nosp)
 	{
 		usleep(1000);
-		if (!decrease_philo_ttpe(philo, get_geptime_ms(pre_time)))
+		if (!decrease_philo_ttpe(philo, get_timegap_ms(pre_time)))
 			break ;
 		gettimeofday(&pre_time, NULL);
 	}

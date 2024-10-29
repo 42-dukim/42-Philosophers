@@ -12,7 +12,7 @@
 
 #include "../inc/ft_philo.h"
 
-uint	get_geptime_ms(struct timeval start_time)
+uint	get_timegap_ms(struct timeval start_time)
 {
 	struct timeval	end_time;
 	struct timeval	gep_time;

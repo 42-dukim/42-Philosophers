@@ -51,10 +51,10 @@ typedef struct s_philo_option
 
 typedef struct s_fork
 {
-	pthread_mutex_t	*left;
-	pthread_mutex_t	*right;
-	t_bool			left_taken;
-	t_bool			right_taken;
+	pthread_mutex_t	*frt;
+	pthread_mutex_t	*scd;
+	t_bool			frt_taken;
+	t_bool			scd_taken;
 }					t_fork;
 
 typedef struct s_philo_information
@@ -82,11 +82,16 @@ typedef struct s_philo
 uint		get_timegap_ms(struct timeval start_time);
 
 void		parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo);
+
+void		ph_phtdown_fork(t_fork *my_fork);
+t_bool		ph_take_fork(t_philo_arg *philo_arg);
 void		create_forks(t_philo *philo);
+
 void		create_philo_infos(t_philo *philo);
 t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[]);
 
 void		*routine(void *opt);
+
 t_bool		print_philo(uint i_philo, t_routine_code code, uint time_stamp);
 
 void		handle_monitoring(t_philo *philo, t_philo_arg *arg);

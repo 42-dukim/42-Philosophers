@@ -12,38 +12,6 @@
 
 #include "../inc/ft_philo.h"
 
-static t_bool	ph_take_fork(t_philo_arg *philo_arg)
-{
-	uint			i_philo;
-	t_fork			*my_fork;
-	struct timeval	start_time;
-
-	i_philo = philo_arg->info->i;
-	my_fork = &(philo_arg->info->my_fork);
-	start_time = philo_arg->opt->time;
-	if (i_philo % 2)
-	{	
-		pthread_mutex_lock(my_fork->left);
-		my_fork->left_taken = true;
-		if (print_philo(i_philo, TAKE_FORK, get_timegap_ms(start_time)))
-			return (true);
-		pthread_mutex_lock(my_fork->right);
-		my_fork->right_taken = true;
-		if (print_philo(i_philo, TAKE_FORK, get_timegap_ms(start_time)))
-			return (true);
-		return (false);
-	}
-	pthread_mutex_lock(my_fork->right);
-	my_fork->right_taken = true;
-	if (print_philo(i_philo, TAKE_FORK, get_timegap_ms(start_time)))
-		return (true);
-	pthread_mutex_lock(my_fork->left);
-	my_fork->left_taken = true;
-	if (print_philo(i_philo, TAKE_FORK, get_timegap_ms(start_time)))
-		return (true);
-	return (false);
-}
-
 static t_bool	ph_eat(t_philo_arg *philo_arg)
 {
 	uint			i_philo;
@@ -57,12 +25,9 @@ static t_bool	ph_eat(t_philo_arg *philo_arg)
 		return (true);
 	// TODO:ttpe를 mutex로 lock 걸어 모니터링시 함부로 못 죽이게!
 	usleep(philo_arg->opt->tte * 1000);
-	philo_arg->info->ttpe = philo_arg->opt->ttd;
+	philo_arg->info->ttpe = get_timegap_ms(philo_arg->opt->time);
 	philo_arg->info->nme += 1;
-	pthread_mutex_unlock(my_fork->right);
-	pthread_mutex_unlock(my_fork->left);
-	my_fork->right_taken = false;
-	my_fork->left_taken = false;
+	ph_phtdown_fork(my_fork);
 	if (philo_arg->info->nme == philo_arg->opt->nme)
 		return (true);
 	return (false);
@@ -113,12 +78,7 @@ void	*routine(void *arg)
 		if (ph_think(philo_arg))
 			break ;
 	}
-	if (my_fork->left_taken)
-		pthread_mutex_unlock(my_fork->left);
-	if (my_fork->right_taken)
-		pthread_mutex_unlock(my_fork->right);
-	my_fork->left_taken = false;
-	my_fork->right_taken = false;
+	ph_phtdown_fork(my_fork);
 	philo_arg->opt->nosp--;
 	return NULL;
 }

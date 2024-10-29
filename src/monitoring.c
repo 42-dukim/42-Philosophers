@@ -15,12 +15,7 @@
 static void	died_philo(uint i_philo, t_fork *my_fork, uint time_stamp)
 {
 	print_philo(i_philo, DIED, time_stamp);
-	if (my_fork->left_taken)
-		pthread_mutex_unlock(my_fork->left);
-	if (my_fork->right_taken)
-		pthread_mutex_unlock(my_fork->right);
-	my_fork->left_taken = false;
-	my_fork->right_taken = false;
+	ph_phtdown_fork(my_fork);
 }
 
 static t_bool	decrease_philo_ttpe(t_philo *philo, uint gep_time)
@@ -32,12 +27,11 @@ static t_bool	decrease_philo_ttpe(t_philo *philo, uint gep_time)
 	num_of_philo = philo->opt->nop;
 	while (i < num_of_philo)
 	{
-		if (philo->infos[i].ttpe <= gep_time)
+		if (philo->infos[i].ttpe + philo->opt->ttd <= get_timegap_ms(philo->opt->time))
 		{
 			died_philo(i, &(philo->infos[i].my_fork), get_timegap_ms(philo->opt->time));
 			return (false);
 		}
-		philo->infos[i].ttpe -= gep_time;
 		i++;
 	}
 	return (true);

@@ -69,7 +69,10 @@ t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[])
 		arg[i].opt = philo->opt;
 		arg[i].info = &(philo->infos[i]);
 		if (pthread_create(&(philo->threads[i]), NULL, routine, &arg[i]))
+		{
+			free(arg);
 			return (NULL);
+		}
 		i++;
 	}
 	return (arg);

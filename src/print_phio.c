@@ -15,15 +15,15 @@
 static void	print_philo_stat(uint i_philo, uint time_stamp, t_routine_code code)
 {
 	if (code == TAKE_FORK)
-		printf("%5u %u has taken a fork\n", time_stamp, i_philo);
+		printf("%-5u %u has taken a fork\n", time_stamp, i_philo);
 	if (code == EAT)
-		printf("%5u %u is eating\n", time_stamp, i_philo);
+		printf("%-5u %u is eating\n", time_stamp, i_philo);
 	if (code == SLEEP)
-		printf("%5u %u is sleeping\n", time_stamp, i_philo);
+		printf("%-5u %u is sleeping\n", time_stamp, i_philo);
 	if (code == THINK)
-		printf("%5u %u is thinking\n", time_stamp, i_philo);
+		printf("%-5u %u is thinking\n", time_stamp, i_philo);
 	if (code == DIED)
-		printf("%5u %u is died\n", time_stamp, i_philo);
+		printf("%-5u %u is died\n", time_stamp, i_philo);
 }
 
 t_bool	check_philo_stat(t_philo_opt *opt, uint i_philo, t_routine_code code)

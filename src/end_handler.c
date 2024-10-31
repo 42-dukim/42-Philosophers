@@ -47,7 +47,6 @@ void	handle_philo_end(t_philo *philo, t_philo_arg *arg, t_bool is_success)
 		pthread_join(philo->threads[i], NULL);
 		i++;
 	}
-	print_philo(0, END, 0);
 	if (is_success)
 		end_success(philo, arg);
 	else

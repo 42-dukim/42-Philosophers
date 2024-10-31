@@ -26,32 +26,21 @@ static void	print_philo_stat(uint i_philo, uint time_stamp, t_routine_code code)
 		printf("%5u %u is died\n", time_stamp, i_philo);
 }
 
-t_bool	print_philo(uint i_philo, t_routine_code code, uint time_stamp)
+t_bool	check_philo_stat(t_philo_opt *opt, uint i_philo, t_routine_code code)
 {
-	static pthread_mutex_t *print_mutex;
-	static t_bool			end_flag;
+	static pthread_mutex_t print_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-	if (code == END)
+	pthread_mutex_lock(&(opt->opt_mutex));
+	if (opt->nosp == 0)
 	{
-		free(print_mutex);
-		return (true);
+		pthread_mutex_unlock(&(opt->opt_mutex));
+		return false;
 	}
-	if (end_flag == true)
-		return (true);
-	if (print_mutex == NULL)
-	{
-		print_mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * 1);
-		pthread_mutex_init(print_mutex, NULL);
-	}
-	pthread_mutex_lock(print_mutex);
-	print_philo_stat(i_philo, time_stamp, code);
+	pthread_mutex_unlock(&(opt->opt_mutex));
+	pthread_mutex_lock(&print_mutex);
+	print_philo_stat(i_philo, get_timegap_ms(opt->time), code);
+	pthread_mutex_unlock(&print_mutex);
 	if (code == DIED)
-	{
-		end_flag = true;
-		pthread_mutex_unlock(print_mutex);
-		pthread_mutex_destroy(print_mutex);
-		return (true);
-	}
-	pthread_mutex_unlock(print_mutex);
-	return (false);
+		pthread_mutex_destroy(&print_mutex);
+	return (true);
 }

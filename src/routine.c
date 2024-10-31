@@ -16,44 +16,47 @@ static t_bool	ph_eat(t_philo_arg *philo_arg)
 {
 	uint			i_philo;
 	t_fork			*my_fork;
-	struct timeval	start_time;
 	
 	i_philo = philo_arg->info->i;
 	my_fork = &(philo_arg->info->my_fork);
-	start_time = philo_arg->opt->time;
-	if (print_philo(i_philo, EAT, get_timegap_ms(start_time)))
-		return (true);
+	if (!check_philo_stat(philo_arg->opt, i_philo, EAT))
+		return (false);
+
 	// TODO:ttpe를 mutex로 lock 걸어 모니터링시 함부로 못 죽이게!
+	// lock
 	usleep(philo_arg->opt->tte * 1000);
 	philo_arg->info->ttpe = get_timegap_ms(philo_arg->opt->time);
+	// unlock
+
 	philo_arg->info->nme += 1;
-	ph_phtdown_fork(my_fork);
 	if (philo_arg->info->nme == philo_arg->opt->nme)
-		return (true);
-	return (false);
+	{
+		pthread_mutex_lock(&(philo_arg->opt->opt_mutex));
+		if (philo_arg->opt->nosp != 0)
+			philo_arg->opt->nosp--;
+		pthread_mutex_unlock(&(philo_arg->opt->opt_mutex));
+		return (false);
+	}
+	ph_phtdown_fork(my_fork);
+	return (true);
 }
 
 static t_bool	ph_sleep(t_philo_arg *philo_arg)
 {
 	uint			i_philo;
-	struct timeval	start_time;
 
 	i_philo = philo_arg->info->i;
-	start_time = philo_arg->opt->time;
-	if (print_philo(i_philo, SLEEP, get_timegap_ms(start_time)))
-		return (true);
+	if(!check_philo_stat(philo_arg->opt, philo_arg->info->i, SLEEP))
+		return (false);
 	usleep(philo_arg->opt->tts * 1000);
-	return (false);
+	return (true);
 }
 
 static t_bool	ph_think(t_philo_arg *philo_arg)
 {
-	struct timeval	start_time;
-
-	start_time = philo_arg->opt->time;
-	if (print_philo(philo_arg->info->i, THINK, get_timegap_ms(start_time)))
-		return (true);
-	return (false);
+	if(!check_philo_stat(philo_arg->opt, philo_arg->info->i, THINK))
+		return (false);
+	return (true);
 }
 
 void	*routine(void *arg)
@@ -61,24 +64,20 @@ void	*routine(void *arg)
 	t_philo_arg	*philo_arg;
 	uint		i_philo;
 	t_fork		*my_fork;
+	t_philo_opt	*opt;
 
 	philo_arg = (t_philo_arg *)arg;
 	i_philo = philo_arg->info->i;
 	my_fork = &(philo_arg->info->my_fork);
+	opt = philo_arg->opt;
 	if (i_philo % 2)
 		usleep(10000);
 	while (1)
 	{
-		if (ph_take_fork(philo_arg))
-			break ;
-		if (ph_eat(philo_arg))
-			break ;
-		if (ph_sleep(philo_arg))
-			break ;
-		if (ph_think(philo_arg))
+		if (!ph_take_fork(philo_arg) || !ph_eat(philo_arg) \
+			|| !ph_sleep(philo_arg) || !ph_think(philo_arg))
 			break ;
 	}
 	ph_phtdown_fork(my_fork);
-	philo_arg->opt->nosp--;
 	return NULL;
 }

@@ -47,6 +47,7 @@ typedef struct s_philo_option
 	uint			nme;
 	struct timeval	time;
 	uint			nosp;			// nom of survive philo
+	pthread_mutex_t	opt_mutex;
 }					t_philo_opt;
 
 typedef struct s_fork
@@ -92,7 +93,7 @@ t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[]);
 
 void		*routine(void *opt);
 
-t_bool		print_philo(uint i_philo, t_routine_code code, uint time_stamp);
+t_bool		check_philo_stat(t_philo_opt *opt, uint i_philo, t_routine_code code);
 
 void		handle_monitoring(t_philo *philo, t_philo_arg *arg);
 void		handle_philo_end(t_philo *philo, t_philo_arg *arg, t_bool is_success);

@@ -14,7 +14,7 @@
 
 void	create_forks(t_philo *philo)
 {
-	uint			i;
+	uint	i;
 
 	if (!philo->opt)
 		return ;
@@ -48,18 +48,16 @@ t_bool	ph_take_fork(t_philo_arg *philo_arg)
 {
 	uint			i_philo;
 	t_fork			*my_fork;
-	struct timeval	start_time;
 
 	i_philo = philo_arg->info->i;
 	my_fork = &(philo_arg->info->my_fork);
-	start_time = philo_arg->opt->time;
-	
 	pthread_mutex_lock(my_fork->frt);
 	my_fork->frt_taken = true;
-	print_philo(i_philo, TAKE_FORK, get_timegap_ms(start_time));
-
+	if (!check_philo_stat(philo_arg->opt, i_philo, TAKE_FORK))
+		return (false);
 	pthread_mutex_lock(my_fork->scd);
 	my_fork->scd_taken = true;
-	print_philo(i_philo, TAKE_FORK, get_timegap_ms(start_time));
-	return (false);
+	if(!check_philo_stat(philo_arg->opt, i_philo, TAKE_FORK))
+		return (false);
+	return (true);
 }

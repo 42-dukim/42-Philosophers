@@ -52,4 +52,5 @@ void	parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo)
 	else
 		philo->opt->nme = -1;
 	philo->opt->nosp = philo->opt->nop;
+	pthread_mutex_init(&philo->opt->opt_mutex, NULL);
 }

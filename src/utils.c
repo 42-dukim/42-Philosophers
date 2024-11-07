@@ -26,7 +26,7 @@ uint	get_timegap_ms(struct timeval start_time)
 void	ms_sleep(uint time)
 {
 	struct timeval	start_time;
-	
+
 	if (time <= 1)
 	{
 		usleep(time * 1000);

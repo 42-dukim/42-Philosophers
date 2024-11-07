@@ -18,7 +18,7 @@ void	create_forks(t_philo *philo)
 
 	if (!philo->opt)
 		return ;
-	philo->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * philo->opt->nop);
+	philo->forks = malloc(sizeof(pthread_mutex_t) * philo->opt->nop);
 	if (!philo->forks)
 		return ;
 	i = 0;
@@ -57,7 +57,7 @@ t_bool	ph_take_fork(t_philo_arg *philo_arg)
 		return (false);
 	pthread_mutex_lock(my_fork->scd);
 	my_fork->scd_taken = true;
-	if(!check_philo_stat(philo_arg->opt, i_philo, TAKE_FORK))
+	if (!check_philo_stat(philo_arg->opt, i_philo, TAKE_FORK))
 		return (false);
 	return (true);
 }

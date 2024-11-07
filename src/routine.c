@@ -16,12 +16,12 @@ static t_bool	ph_eat(t_philo_arg *philo_arg)
 {
 	uint			i_philo;
 	t_fork			*my_fork;
-	
+
 	i_philo = philo_arg->info->i;
 	my_fork = &(philo_arg->info->my_fork);
 	if (!check_philo_stat(philo_arg->opt, i_philo, EAT))
 		return (false);
-	philo_arg->info->ttpe = get_timegap_ms(philo_arg->opt->time); // 먹기 시작한 시점부터 계산
+	philo_arg->info->ttpe = get_timegap_ms(philo_arg->opt->time);
 	ms_sleep(philo_arg->opt->tte);
 	philo_arg->info->nme += 1;
 	if (philo_arg->info->nme == philo_arg->opt->nme)
@@ -41,7 +41,7 @@ static t_bool	ph_sleep(t_philo_arg *philo_arg)
 	uint			i_philo;
 
 	i_philo = philo_arg->info->i;
-	if(!check_philo_stat(philo_arg->opt, philo_arg->info->i, SLEEP))
+	if (!check_philo_stat(philo_arg->opt, philo_arg->info->i, SLEEP))
 		return (false);
 	ms_sleep(philo_arg->opt->tts);
 	return (true);
@@ -49,7 +49,7 @@ static t_bool	ph_sleep(t_philo_arg *philo_arg)
 
 static t_bool	ph_think(t_philo_arg *philo_arg)
 {
-	if(!check_philo_stat(philo_arg->opt, philo_arg->info->i, THINK))
+	if (!check_philo_stat(philo_arg->opt, philo_arg->info->i, THINK))
 		return (false);
 	return (true);
 }
@@ -74,5 +74,5 @@ void	*routine(void *arg)
 			break ;
 	}
 	ph_phtdown_fork(my_fork);
-	return NULL;
+	return (NULL);
 }

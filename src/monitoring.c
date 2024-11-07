@@ -30,7 +30,8 @@ static t_bool	decrease_philo_ttpe(t_philo *philo, uint gep_time)
 	num_of_philo = philo->opt->nop;
 	while (i < num_of_philo)
 	{
-		if (philo->infos[i].ttpe + philo->opt->ttd <= get_timegap_ms(philo->opt->time))
+		if (philo->infos[i].ttpe + philo->opt->ttd \
+				<= get_timegap_ms(philo->opt->time))
 		{
 			died_philo(philo->opt, philo->infos[i]);
 			return (false);
@@ -42,8 +43,8 @@ static t_bool	decrease_philo_ttpe(t_philo *philo, uint gep_time)
 
 void	handle_monitoring(t_philo *philo, t_philo_arg *arg)
 {
-	struct timeval pre_time;
-	
+	struct timeval	pre_time;
+
 	pre_time = philo->opt->time;
 	while (philo->opt->nosp)
 	{

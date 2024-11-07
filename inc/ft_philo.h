@@ -23,9 +23,9 @@
 typedef unsigned int	uint;
 
 typedef enum e_bool
-{ 
+{
 	false = 0,
-	true 
+	true
 }	t_bool;
 
 typedef enum e_routine_code
@@ -46,7 +46,7 @@ typedef struct s_philo_option
 	uint			tts;
 	uint			nme;
 	struct timeval	time;
-	uint			nosp;			// nom of survive philo
+	uint			nosp;
 	pthread_mutex_t	opt_mutex;
 }					t_philo_opt;
 
@@ -61,7 +61,7 @@ typedef struct s_fork
 typedef struct s_philo_information
 {
 	uint			i;
-	uint			ttpe;			// time to pre eat
+	uint			ttpe;
 	uint			nme;
 	t_fork			my_fork;
 }					t_philo_info;
@@ -94,9 +94,11 @@ t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[]);
 
 void		*routine(void *opt);
 
-t_bool		check_philo_stat(t_philo_opt *opt, uint i_philo, t_routine_code code);
+t_bool		check_philo_stat(t_philo_opt *opt, uint i_philo, \
+								t_routine_code code);
 
 void		handle_monitoring(t_philo *philo, t_philo_arg *arg);
-void		handle_philo_end(t_philo *philo, t_philo_arg *arg, t_bool is_success);
+void		handle_philo_end(t_philo *philo, t_philo_arg *arg, \
+								t_bool is_success);
 
 #endif

@@ -19,7 +19,7 @@ static int	ft_atoi(const char *nptr)
 
 	sum = 0;
 	minus_cnt = 0;
-	while ((9 <= *nptr && *nptr <= 13 )|| *nptr == ' ')
+	while ((9 <= *nptr && *nptr <= 13) || *nptr == ' ')
 		nptr++;
 	if (*nptr == '+' || *nptr == '-')
 	{

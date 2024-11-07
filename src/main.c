@@ -19,6 +19,7 @@ int	main(int argc, char *argv[])
 
 	if (argc < 5 || argc > 6)
 		return (0);
+	memset(&philo, 0, sizeof(t_philo));
 	arg = start_philo_routine(&philo, argc, argv);
 	if (!arg)
 	{

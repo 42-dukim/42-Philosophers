@@ -17,7 +17,10 @@ void	create_forks(t_philo *philo)
 	t_uint	i;
 
 	if (!philo->opt)
+	{
+		philo->forks = NULL;
 		return ;
+	}
 	philo->forks = malloc(sizeof(pthread_mutex_t) * philo->opt->nop);
 	if (!philo->forks)
 		return ;

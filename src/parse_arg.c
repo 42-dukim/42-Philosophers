@@ -15,25 +15,17 @@
 static int	ft_atoi(const char *nptr)
 {
 	int	sum;
-	int	minus_cnt;
 
 	sum = 0;
-	minus_cnt = 0;
 	while ((9 <= *nptr && *nptr <= 13) || *nptr == ' ')
 		nptr++;
-	if (*nptr == '+' || *nptr == '-')
-	{
-		if (*nptr == '-')
-			minus_cnt++;
-		nptr++;
-	}
+	if (*nptr == '-')
+		return (0);
 	while (*nptr != '\0' && (0 <= *nptr && *nptr <= '9'))
 	{
 		sum = sum * 10 + (*nptr - '0');
 		nptr++;
 	}
-	if (minus_cnt)
-		sum = -sum;
 	return (sum);
 }
 
@@ -46,6 +38,13 @@ void	parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo)
 	philo->opt->ttd = ft_atoi(argv[2]);
 	philo->opt->tte = ft_atoi(argv[3]);
 	philo->opt->tts = ft_atoi(argv[4]);
+	if (!philo->opt->nop || !philo->opt->ttd \
+			|| !philo->opt->tte || !philo->opt->tts)
+	{
+		free(philo->opt);
+		philo->opt = NULL;
+		return ;
+	}
 	gettimeofday(&(philo->opt->time), NULL);
 	if (argc == 6)
 		philo->opt->nme = ft_atoi(argv[5]);

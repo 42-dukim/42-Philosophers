@@ -42,10 +42,13 @@ void	handle_philo_end(t_philo *philo, t_philo_arg *arg, t_bool is_success)
 	t_uint	i;
 
 	i = 0;
-	while (i < philo->opt->nop)
+	if (philo->threads)
 	{
-		pthread_join(philo->threads[i], NULL);
-		i++;
+		while (i < philo->opt->nop)
+		{
+			pthread_join(philo->threads[i], NULL);
+			i++;
+		}
 	}
 	if (is_success)
 		end_success(philo, arg);

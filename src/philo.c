@@ -12,25 +12,6 @@
 
 #include "../inc/ft_philo.h"
 
-static	t_fork	create_my_fork(uint i_philo, uint nop, pthread_mutex_t *forks)
-{
-	t_fork	my_fork;
-
-	if (i_philo % 2)
-	{
-		my_fork.frt = &(forks[(i_philo + 1) % nop]);
-		my_fork.scd = &(forks[i_philo % nop]);
-	}
-	else
-	{
-		my_fork.frt = &(forks[i_philo  % nop]);
-		my_fork.scd = &(forks[(i_philo + 1 )% nop]);
-	}
-	my_fork.frt_taken = false;
-	my_fork.scd_taken = false;
-	return (my_fork);
-}
-
 void	create_philo_infos(t_philo *philo)
 {
 	uint			i;
@@ -46,7 +27,10 @@ void	create_philo_infos(t_philo *philo)
 		philo->infos[i].i = i;
 		philo->infos[i].ttpe = 0;
 		philo->infos[i].nme = 0;
-		philo->infos[i].my_fork = create_my_fork(i, philo->opt->nop, philo->forks);
+		philo->infos[i].my_fork.frt = &(philo->forks[(i + 1) % philo->opt->nop]);
+		philo->infos[i].my_fork.scd = &(philo->forks[i % philo->opt->nop]);
+		philo->infos[i].my_fork.frt_taken = false;
+		philo->infos[i].my_fork.scd_taken = false;
 		i++;
 	}
 }

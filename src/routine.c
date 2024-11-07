@@ -38,9 +38,6 @@ static t_bool	ph_eat(t_philo_arg *philo_arg)
 
 static t_bool	ph_sleep(t_philo_arg *philo_arg)
 {
-	t_uint			i_philo;
-
-	i_philo = philo_arg->info->i;
 	if (!check_philo_stat(philo_arg->opt, philo_arg->info->i, SLEEP))
 		return (false);
 	ms_sleep(philo_arg->opt->tts);
@@ -59,12 +56,10 @@ void	*routine(void *arg)
 	t_philo_arg	*philo_arg;
 	t_uint		i_philo;
 	t_fork		*my_fork;
-	t_philo_opt	*opt;
 
 	philo_arg = (t_philo_arg *)arg;
 	i_philo = philo_arg->info->i;
 	my_fork = &(philo_arg->info->my_fork);
-	opt = philo_arg->opt;
 	if (i_philo % 2)
 		ms_sleep(10);
 	while (1)

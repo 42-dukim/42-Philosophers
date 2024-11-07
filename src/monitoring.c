@@ -21,7 +21,7 @@ static void	died_philo(t_philo_opt *opt, t_philo_info philo_info)
 	ph_phtdown_fork((&philo_info.my_fork));
 }
 
-static t_bool	decrease_philo_ttpe(t_philo *philo, t_uint gep_time)
+static t_bool	decrease_philo_ttpe(t_philo *philo)
 {
 	t_uint	i;
 	t_uint	num_of_philo;
@@ -43,15 +43,11 @@ static t_bool	decrease_philo_ttpe(t_philo *philo, t_uint gep_time)
 
 void	handle_monitoring(t_philo *philo, t_philo_arg *arg)
 {
-	struct timeval	pre_time;
-
-	pre_time = philo->opt->time;
 	while (philo->opt->nosp)
 	{
 		ms_sleep(1);
-		if (!decrease_philo_ttpe(philo, get_timegap_ms(pre_time)))
+		if (!decrease_philo_ttpe(philo))
 			break ;
-		gettimeofday(&pre_time, NULL);
 	}
 	handle_philo_end(philo, arg, true);
 }

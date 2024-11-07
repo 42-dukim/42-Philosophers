@@ -22,3 +22,21 @@ uint	get_timegap_ms(struct timeval start_time)
 	gep_time.tv_usec = end_time.tv_usec - start_time.tv_usec;
 	return (gep_time.tv_sec * 1000 + gep_time.tv_usec / 1000);
 }
+
+void	ms_sleep(uint time)
+{
+	struct timeval	start_time;
+	
+	if (time <= 1)
+	{
+		usleep(time * 1000);
+		return ;
+	}
+	gettimeofday(&start_time, NULL);
+	while (1)
+	{
+		usleep(500);
+		if (get_timegap_ms(start_time) >= time)
+			return ;
+	}
+}

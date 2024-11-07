@@ -81,6 +81,7 @@ typedef struct s_philo
 }					t_philo;
 
 uint		get_timegap_ms(struct timeval start_time);
+void		ms_sleep(uint time);
 
 void		parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo);
 

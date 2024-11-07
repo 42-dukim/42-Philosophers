@@ -47,7 +47,7 @@ void	handle_monitoring(t_philo *philo, t_philo_arg *arg)
 	pre_time = philo->opt->time;
 	while (philo->opt->nosp)
 	{
-		usleep(1000);
+		ms_sleep(1);
 		if (!decrease_philo_ttpe(philo, get_timegap_ms(pre_time)))
 			break ;
 		gettimeofday(&pre_time, NULL);

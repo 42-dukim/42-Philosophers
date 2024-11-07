@@ -21,13 +21,8 @@ static t_bool	ph_eat(t_philo_arg *philo_arg)
 	my_fork = &(philo_arg->info->my_fork);
 	if (!check_philo_stat(philo_arg->opt, i_philo, EAT))
 		return (false);
-
-	// TODO:ttpe를 mutex로 lock 걸어 모니터링시 함부로 못 죽이게!
-	// lock
-	usleep(philo_arg->opt->tte * 1000);
-	philo_arg->info->ttpe = get_timegap_ms(philo_arg->opt->time);
-	// unlock
-
+	philo_arg->info->ttpe = get_timegap_ms(philo_arg->opt->time); // 먹기 시작한 시점부터 계산
+	ms_sleep(philo_arg->opt->tte);
 	philo_arg->info->nme += 1;
 	if (philo_arg->info->nme == philo_arg->opt->nme)
 	{
@@ -48,7 +43,7 @@ static t_bool	ph_sleep(t_philo_arg *philo_arg)
 	i_philo = philo_arg->info->i;
 	if(!check_philo_stat(philo_arg->opt, philo_arg->info->i, SLEEP))
 		return (false);
-	usleep(philo_arg->opt->tts * 1000);
+	ms_sleep(philo_arg->opt->tts);
 	return (true);
 }
 
@@ -71,7 +66,7 @@ void	*routine(void *arg)
 	my_fork = &(philo_arg->info->my_fork);
 	opt = philo_arg->opt;
 	if (i_philo % 2)
-		usleep(10000);
+		ms_sleep(10);
 	while (1)
 	{
 		if (!ph_take_fork(philo_arg) || !ph_eat(philo_arg) \

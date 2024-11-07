@@ -22,7 +22,7 @@ static void	end_failure(t_philo *philo)
 
 static void	end_success(t_philo *philo, t_philo_arg *arg)
 {
-	uint	i;
+	t_uint	i;
 
 	i = 0;
 	while (i < philo->opt->nop)
@@ -39,7 +39,7 @@ static void	end_success(t_philo *philo, t_philo_arg *arg)
 
 void	handle_philo_end(t_philo *philo, t_philo_arg *arg, t_bool is_success)
 {
-	uint	i;
+	t_uint	i;
 
 	i = 0;
 	while (i < philo->opt->nop)

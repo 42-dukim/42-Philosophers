@@ -20,7 +20,7 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-typedef unsigned int	uint;
+typedef unsigned int	t_uint;
 
 typedef enum e_bool
 {
@@ -40,13 +40,13 @@ typedef enum e_routine_code
 
 typedef struct s_philo_option
 {
-	uint			nop;
-	uint			ttd;
-	uint			tte;
-	uint			tts;
-	uint			nme;
+	t_uint			nop;
+	t_uint			ttd;
+	t_uint			tte;
+	t_uint			tts;
+	t_uint			nme;
 	struct timeval	time;
-	uint			nosp;
+	t_uint			nosp;
 	pthread_mutex_t	opt_mutex;
 }					t_philo_opt;
 
@@ -60,9 +60,9 @@ typedef struct s_fork
 
 typedef struct s_philo_information
 {
-	uint			i;
-	uint			ttpe;
-	uint			nme;
+	t_uint			i;
+	t_uint			ttpe;
+	t_uint			nme;
 	t_fork			my_fork;
 }					t_philo_info;
 
@@ -80,8 +80,8 @@ typedef struct s_philo
 	pthread_t		*threads;
 }					t_philo;
 
-uint		get_timegap_ms(struct timeval start_time);
-void		ms_sleep(uint time);
+t_uint		get_timegap_ms(struct timeval start_time);
+void		ms_sleep(t_uint time);
 
 void		parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo);
 
@@ -94,7 +94,7 @@ t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[]);
 
 void		*routine(void *opt);
 
-t_bool		check_philo_stat(t_philo_opt *opt, uint i_philo, \
+t_bool		check_philo_stat(t_philo_opt *opt, t_uint i_philo, \
 								t_routine_code code);
 
 void		handle_monitoring(t_philo *philo, t_philo_arg *arg);

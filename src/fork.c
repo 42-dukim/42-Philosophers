@@ -14,7 +14,7 @@
 
 void	create_forks(t_philo *philo)
 {
-	uint	i;
+	t_uint	i;
 
 	if (!philo->opt)
 		return ;
@@ -46,7 +46,7 @@ void	ph_phtdown_fork(t_fork *my_fork)
 
 t_bool	ph_take_fork(t_philo_arg *philo_arg)
 {
-	uint			i_philo;
+	t_uint			i_philo;
 	t_fork			*my_fork;
 
 	i_philo = philo_arg->info->i;

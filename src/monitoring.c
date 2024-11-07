@@ -21,10 +21,10 @@ static void	died_philo(t_philo_opt *opt, t_philo_info philo_info)
 	ph_phtdown_fork((&philo_info.my_fork));
 }
 
-static t_bool	decrease_philo_ttpe(t_philo *philo, uint gep_time)
+static t_bool	decrease_philo_ttpe(t_philo *philo, t_uint gep_time)
 {
-	uint	i;
-	uint	num_of_philo;
+	t_uint	i;
+	t_uint	num_of_philo;
 
 	i = 0;
 	num_of_philo = philo->opt->nop;

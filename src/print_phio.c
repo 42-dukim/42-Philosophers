@@ -12,7 +12,8 @@
 
 #include "../inc/ft_philo.h"
 
-static void	print_philo_stat(uint i_philo, uint time_stamp, t_routine_code code)
+static void	print_philo_stat(t_uint i_philo, t_uint time_stamp, \
+								t_routine_code code)
 {
 	if (code == TAKE_FORK)
 		printf("%-5u %u has taken a fork\n", time_stamp, i_philo);
@@ -26,7 +27,7 @@ static void	print_philo_stat(uint i_philo, uint time_stamp, t_routine_code code)
 		printf("%-5u %u is died\n", time_stamp, i_philo);
 }
 
-t_bool	check_philo_stat(t_philo_opt *opt, uint i_philo, t_routine_code code)
+t_bool	check_philo_stat(t_philo_opt *opt, t_uint i_philo, t_routine_code code)
 {
 	static pthread_mutex_t	print_mutex = PTHREAD_MUTEX_INITIALIZER;
 

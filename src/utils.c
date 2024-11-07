@@ -12,7 +12,7 @@
 
 #include "../inc/ft_philo.h"
 
-uint	get_timegap_ms(struct timeval start_time)
+t_uint	get_timegap_ms(struct timeval start_time)
 {
 	struct timeval	end_time;
 	struct timeval	gep_time;
@@ -23,7 +23,7 @@ uint	get_timegap_ms(struct timeval start_time)
 	return (gep_time.tv_sec * 1000 + gep_time.tv_usec / 1000);
 }
 
-void	ms_sleep(uint time)
+void	ms_sleep(t_uint time)
 {
 	struct timeval	start_time;
 

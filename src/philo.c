@@ -14,7 +14,7 @@
 
 void	create_philo_infos(t_philo *philo)
 {
-	uint			i;
+	t_uint			i;
 
 	if (!philo->forks)
 		return ;
@@ -39,7 +39,7 @@ void	create_philo_infos(t_philo *philo)
 t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[])
 {
 	t_philo_arg	*arg;
-	uint		i;
+	t_uint		i;
 
 	parse_arg_to_philo_opt(argc, argv, philo);
 	create_forks(philo);

@@ -14,7 +14,7 @@
 
 static t_bool	ph_eat(t_philo_arg *philo_arg)
 {
-	uint			i_philo;
+	t_uint			i_philo;
 	t_fork			*my_fork;
 
 	i_philo = philo_arg->info->i;
@@ -38,7 +38,7 @@ static t_bool	ph_eat(t_philo_arg *philo_arg)
 
 static t_bool	ph_sleep(t_philo_arg *philo_arg)
 {
-	uint			i_philo;
+	t_uint			i_philo;
 
 	i_philo = philo_arg->info->i;
 	if (!check_philo_stat(philo_arg->opt, philo_arg->info->i, SLEEP))
@@ -57,7 +57,7 @@ static t_bool	ph_think(t_philo_arg *philo_arg)
 void	*routine(void *arg)
 {
 	t_philo_arg	*philo_arg;
-	uint		i_philo;
+	t_uint		i_philo;
 	t_fork		*my_fork;
 	t_philo_opt	*opt;
 

@@ -44,7 +44,7 @@ typedef struct s_philo_option
 	t_uint			ttd;
 	t_uint			tte;
 	t_uint			tts;
-	t_uint			nme;
+	int				nme;
 	struct timeval	time;
 	t_uint			nosp;
 	pthread_mutex_t	opt_mutex;
@@ -62,7 +62,7 @@ typedef struct s_philo_information
 {
 	t_uint			i;
 	t_uint			ttpe;
-	t_uint			nme;
+	int				nme;
 	t_fork			my_fork;
 }					t_philo_info;
 

@@ -38,18 +38,18 @@ void	parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo)
 	philo->opt->ttd = ft_atoi(argv[2]);
 	philo->opt->tte = ft_atoi(argv[3]);
 	philo->opt->tts = ft_atoi(argv[4]);
+	if (argc == 6)
+		philo->opt->nme = ft_atoi(argv[5]);
+	else
+		philo->opt->nme = -1;
 	if (!philo->opt->nop || !philo->opt->ttd \
-			|| !philo->opt->tte || !philo->opt->tts)
+			|| !philo->opt->tte || !philo->opt->tts || !philo->opt->nme)
 	{
 		free(philo->opt);
 		philo->opt = NULL;
 		return ;
 	}
 	gettimeofday(&(philo->opt->time), NULL);
-	if (argc == 6)
-		philo->opt->nme = ft_atoi(argv[5]);
-	else
-		philo->opt->nme = -1;
 	philo->opt->nosp = philo->opt->nop;
 	pthread_mutex_init(&philo->opt->opt_mutex, NULL);
 }

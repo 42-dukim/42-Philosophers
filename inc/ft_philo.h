@@ -90,8 +90,7 @@ t_bool		ph_take_fork(t_philo_arg *philo_arg);
 void		create_forks(t_philo *philo);
 
 void		create_philo_infos(t_philo *philo);
-t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[]);
-
+t_bool		start_philo_routine(t_philo *philo, t_philo_arg *arg);
 void		*routine(void *opt);
 
 t_bool		check_philo_stat(t_philo_opt *opt, t_uint i_philo, \

@@ -39,35 +39,21 @@ void	create_philo_infos(t_philo *philo)
 	}
 }
 
-t_philo_arg	*start_philo_routine(t_philo *philo, int argc, char *argv[])
+t_bool	start_philo_routine(t_philo *philo, t_philo_arg *arg)
 {
-	t_philo_arg	*arg;
 	t_uint		i;
 
-	parse_arg_to_philo_opt(argc, argv, philo);
-	create_forks(philo);
-	create_philo_infos(philo);
-	if (!philo->infos)
-		return (NULL);
-	philo->threads = (pthread_t *)malloc(sizeof(pthread_t) * philo->opt->nop);
-	arg = (t_philo_arg *)malloc(sizeof(t_philo_arg) * philo->opt->nop);
-	if (!philo->threads || !arg)
-	{
-		free(philo->threads);
-		philo->threads = 0;
-		return (NULL);
-	}
-	i = -1;
-	while (i++ < philo->opt->nop)
+	i = 0;
+	while (i < philo->opt->nop)
 	{
 		arg[i].opt = philo->opt;
 		arg[i].info = &(philo->infos[i]);
 		if (pthread_create(&(philo->threads[i]), NULL, routine, &arg[i]))
 		{
-			free(arg);
 			philo->opt->nop = i;
-			return (NULL);
+			return (false);
 		}
+		i++;
 	}
-	return (arg);
+	return (true);
 }

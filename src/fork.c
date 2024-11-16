@@ -31,6 +31,8 @@ void	create_forks(t_philo *philo)
 		{
 			while (i > 0)
 				pthread_mutex_destroy(&philo->forks[--i]);
+			free(philo->forks);
+			philo->forks = NULL;
 			return ;
 		}
 		i++;

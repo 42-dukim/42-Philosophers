@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -I philo/inc
+CFLAGS  = -Wall -Wextra -Werror -I inc
 NAME 	= philo
 SRCDIR  = src
 INCDIR  = inc

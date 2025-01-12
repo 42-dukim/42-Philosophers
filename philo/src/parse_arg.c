@@ -12,7 +12,7 @@
 
 #include "../inc/ft_philo.h"
 
-static int	ft_atoi(const char *nptr)
+static int	ph_atoi(const char *nptr)
 {
 	int	sum;
 
@@ -34,12 +34,12 @@ void	parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo)
 	philo->opt = (t_philo_opt *)malloc(sizeof(t_philo_opt) * 1);
 	if (!philo->opt)
 		return ;
-	philo->opt->nop = ft_atoi(argv[1]);
-	philo->opt->ttd = ft_atoi(argv[2]);
-	philo->opt->tte = ft_atoi(argv[3]);
-	philo->opt->tts = ft_atoi(argv[4]);
+	philo->opt->nop = ph_atoi(argv[1]);
+	philo->opt->ttd = ph_atoi(argv[2]);
+	philo->opt->tte = ph_atoi(argv[3]);
+	philo->opt->tts = ph_atoi(argv[4]);
 	if (argc == 6)
-		philo->opt->nme = ft_atoi(argv[5]);
+		philo->opt->nme = ph_atoi(argv[5]);
 	else
 		philo->opt->nme = -1;
 	if (!philo->opt->nop || !philo->opt->ttd \

@@ -86,7 +86,6 @@ void		ms_sleep(t_uint time);
 void		parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo);
 
 void		ph_phtdown_fork(t_fork *my_fork);
-t_bool		ph_take_fork(t_philo_arg *philo_arg);
 void		create_forks(t_philo *philo);
 
 void		create_philo_infos(t_philo *philo);

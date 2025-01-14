@@ -48,21 +48,3 @@ void	ph_phtdown_fork(t_fork *my_fork)
 	my_fork->frt_taken = false;
 	my_fork->scd_taken = false;
 }
-
-t_bool	ph_take_fork(t_philo_arg *philo_arg)
-{
-	t_uint			i_philo;
-	t_fork			*my_fork;
-
-	i_philo = philo_arg->info->i;
-	my_fork = &(philo_arg->info->my_fork);
-	pthread_mutex_lock(my_fork->frt);
-	my_fork->frt_taken = true;
-	if (!check_philo_stat(philo_arg->opt, i_philo, TAKE_FORK))
-		return (false);
-	pthread_mutex_lock(my_fork->scd);
-	my_fork->scd_taken = true;
-	if (!check_philo_stat(philo_arg->opt, i_philo, TAKE_FORK))
-		return (false);
-	return (true);
-}

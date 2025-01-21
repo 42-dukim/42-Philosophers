@@ -45,5 +45,6 @@ int	main(int argc, char *argv[])
 		return (0);
 	}
 	start_philo_routine(&philo, arg);
-	handle_monitoring(&philo, arg);
+    // n 개의 모니터링 쓰레드가 종료되길 wait 해야할 듯?
+	// handle_monitoring(&philo, arg);
 }

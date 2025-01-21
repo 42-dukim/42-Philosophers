@@ -20,11 +20,9 @@ static t_bool	ph_take_fork(t_philo_arg *philo_arg)
 	i_philo = philo_arg->info->i;
 	my_fork = &(philo_arg->info->my_fork);
 	pthread_mutex_lock(my_fork->frt);
-	my_fork->frt_taken = true;
 	if (!check_philo_stat(philo_arg->opt, i_philo, TAKE_FORK))
 		return (false);
 	pthread_mutex_lock(my_fork->scd);
-	my_fork->scd_taken = true;
 	if (!check_philo_stat(philo_arg->opt, i_philo, TAKE_FORK))
 		return (false);
 	return (true);
@@ -39,7 +37,9 @@ static t_bool	ph_eat(t_philo_arg *philo_arg)
 	my_fork = &(philo_arg->info->my_fork);
 	if (!check_philo_stat(philo_arg->opt, i_philo, EAT))
 		return (false);
+	pthread_mutex_lock(&(philo_arg->info->ttpe_mutex));
 	philo_arg->info->ttpe = get_timegap_ms(philo_arg->opt->time);
+	pthread_mutex_unlock(&(philo_arg->info->ttpe_mutex));
 	ms_sleep(philo_arg->opt->tte);
 	philo_arg->info->nme += 1;
 	if (philo_arg->info->nme == philo_arg->opt->nme)
@@ -50,7 +50,8 @@ static t_bool	ph_eat(t_philo_arg *philo_arg)
 		pthread_mutex_unlock(&(philo_arg->opt->opt_mutex));
 		return (false);
 	}
-	ph_phtdown_fork(my_fork);
+	pthread_mutex_unlock(my_fork->frt);
+	pthread_mutex_unlock(my_fork->scd);
 	return (true);
 }
 

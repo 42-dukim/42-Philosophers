@@ -43,7 +43,7 @@ void	parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo)
 	else
 		philo->opt->nme = -1;
 	if (!philo->opt->nop || !philo->opt->ttd \
-			|| !philo->opt->tte || !philo->opt->tts || !philo->opt->nme)
+		|| !philo->opt->tte || !philo->opt->tts || !philo->opt->nme)
 	{
 		free(philo->opt);
 		philo->opt = NULL;

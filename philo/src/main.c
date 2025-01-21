@@ -12,39 +12,49 @@
 
 #include "../inc/ft_philo.h"
 
-static t_philo_arg	*create_philo_arg(t_philo *philo, int argc, char *argv[])
+static void	start_philo_routine(t_philo *philo)
 {
-	t_philo_arg		*arg;
+	t_uint		i;
+	t_philo_arg *arg;
 
+	i = 0;
+	while (i < philo->opt->nop)
+	{
+		arg = malloc(sizeof(t_philo_arg) * 1);
+		arg->opt = philo->opt;
+		arg->info = &(philo->infos[i]);
+		pthread_create(&(philo->threads[i]), NULL, routine, arg);
+		// monitor thread
+		i++;
+	}
+}
+
+static t_bool	init_philo(t_philo *philo, int argc, char *argv[])
+{
 	memset(philo, 0, sizeof(t_philo));
 	parse_arg_to_philo_opt(argc, argv, philo);
 	create_forks(philo);
 	create_philo_infos(philo);
 	if (!philo->infos)
-		return (NULL);
+		return (false);
 	philo->threads = (pthread_t *)malloc(sizeof(pthread_t) * philo->opt->nop);
 	if (!philo->threads)
-		return (NULL);
-	arg = (t_philo_arg *)malloc(sizeof(t_philo_arg) * philo->opt->nop);
-	if (!arg)
-		return (NULL);
-	return (arg);
+		return (false);
+	return (true);
 }
 
 int	main(int argc, char *argv[])
 {
 	t_philo			philo;
-	t_philo_arg		*arg;
 
 	if (argc < 5 || argc > 6)
 		return (0);
-	arg = create_philo_arg(&philo, argc, argv);
-	if (!arg)
+	if (!init_philo(&philo, argc, argv))
 	{
-		handle_philo_end(&philo, arg, false);
+		handle_philo_end(&philo, false);
 		return (0);
 	}
-	start_philo_routine(&philo, arg);
+	start_philo_routine(&philo);
     // n 개의 모니터링 쓰레드가 종료되길 wait 해야할 듯?
 	// handle_monitoring(&philo, arg);
 }

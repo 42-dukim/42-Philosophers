@@ -20,7 +20,7 @@ static void	end_failure(t_philo *philo)
 	free(philo->infos);
 }
 
-static void	end_success(t_philo *philo, t_philo_arg *arg)
+static void	end_success(t_philo *philo)
 {
 	t_uint	i;
 
@@ -34,24 +34,24 @@ static void	end_success(t_philo *philo, t_philo_arg *arg)
 	free(philo->forks);
 	free(philo->threads);
 	free(philo->infos);
-	free(arg);
+
 }
 
-void	handle_philo_end(t_philo *philo, t_philo_arg *arg, t_bool is_success)
+void	handle_philo_end(t_philo *philo, t_bool is_success)
 {
-	t_uint	i;
+	// t_uint	i;
 
-	i = 0;
-	if (philo->threads)
-	{
-		while (i < philo->opt->nop)
-		{
-			pthread_join(philo->threads[i], NULL);
-			i++;
-		}
-	}
+	// i = 0;
+	// if (philo->threads)
+	// {
+	// 	while (i < philo->opt->nop)
+	// 	{
+	// 		pthread_join(philo->threads[i], NULL);
+	// 		i++;
+	// 	}
+	// }
 	if (is_success)
-		end_success(philo, arg);
+		end_success(philo);
 	else
 		end_failure(philo);
 }

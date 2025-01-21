@@ -25,9 +25,9 @@ static t_bool	decrease_philo_ttpe(t_philo_info *info, t_philo_opt *opt)
 {
 	t_uint	ttpe;
 	
-	pthread_mutex_lock(&(info->ttpe_mutex));
+	pthread_mutex_lock(&(info->info_mutex));
 	ttpe = info->ttpe;
-	pthread_mutex_unlock(&(info->ttpe_mutex));
+	pthread_mutex_unlock(&(info->info_mutex));
 	if (ttpe + opt->ttd <= get_timegap_ms(opt->time))
 	{
 		died_philo(info, opt);

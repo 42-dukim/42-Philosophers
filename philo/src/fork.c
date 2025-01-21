@@ -27,14 +27,7 @@ void	create_forks(t_philo *philo)
 	i = 0;
 	while (i < philo->opt->nop)
 	{
-		if (pthread_mutex_init(&philo->forks[i], NULL) == -1)
-		{
-			while (i > 0)
-				pthread_mutex_destroy(&philo->forks[--i]);
-			free(philo->forks);
-			philo->forks = NULL;
-			return ;
-		}
+		pthread_mutex_init(&philo->forks[i], NULL);
 		i++;
 	}
 }

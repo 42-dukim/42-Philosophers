@@ -12,81 +12,68 @@
 
 #include "../inc/ft_philo.h"
 
-static t_bool	ph_take_fork(t_philo_arg *philo_arg)
+static t_bool	ph_take_fork(t_philo_info *info, t_philo_opt *opt)
 {
-	t_uint			i_philo;
-	t_fork			*my_fork;
-
-	i_philo = philo_arg->info->i;
-	my_fork = &(philo_arg->info->my_fork);
-	pthread_mutex_lock(my_fork->frt);
-	if (!check_philo_stat(philo_arg->opt, i_philo, TAKE_FORK))
+	pthread_mutex_lock(info->my_fork.frt);
+	if (!check_philo_stat(opt, info->i, TAKE_FORK))
 		return (false);
-	pthread_mutex_lock(my_fork->scd);
-	if (!check_philo_stat(philo_arg->opt, i_philo, TAKE_FORK))
+	pthread_mutex_lock(info->my_fork.scd);
+	if (!check_philo_stat(opt, info->i, TAKE_FORK))
 		return (false);
 	return (true);
 }
 
-static t_bool	ph_eat(t_philo_arg *philo_arg)
+static t_bool	ph_eat(t_philo_info *info, t_philo_opt *opt)
 {
-	t_uint			i_philo;
-	t_fork			*my_fork;
-
-	i_philo = philo_arg->info->i;
-	my_fork = &(philo_arg->info->my_fork);
-	if (!check_philo_stat(philo_arg->opt, i_philo, EAT))
+	if (!check_philo_stat(opt, info->i, EAT))
 		return (false);
-	pthread_mutex_lock(&(philo_arg->info->ttpe_mutex));
-	philo_arg->info->ttpe = get_timegap_ms(philo_arg->opt->time);
-	pthread_mutex_unlock(&(philo_arg->info->ttpe_mutex));
-	ms_sleep(philo_arg->opt->tte);
-	philo_arg->info->nme += 1;
-	if (philo_arg->info->nme == philo_arg->opt->nme)
+	pthread_mutex_lock(&(info->info_mutex));
+	info->ttpe = get_timegap_ms(opt->time);
+	pthread_mutex_unlock(&(info->info_mutex));
+	ms_sleep(opt->tte);
+	info->nme += 1;
+	if (info->nme == opt->nme)
 	{
-		pthread_mutex_lock(&(philo_arg->opt->opt_mutex));
-		if (philo_arg->opt->nosp != 0)
-			philo_arg->opt->nosp--;
-		pthread_mutex_unlock(&(philo_arg->opt->opt_mutex));
+		pthread_mutex_lock(&(opt->opt_mutex));
+		if (opt->nosp != 0)
+			opt->nosp--;
+		pthread_mutex_unlock(&(opt->opt_mutex));
 		return (false);
 	}
-	pthread_mutex_unlock(my_fork->frt);
-	pthread_mutex_unlock(my_fork->scd);
+	pthread_mutex_unlock(info->my_fork.frt);
+	pthread_mutex_unlock(info->my_fork.scd);
 	return (true);
 }
 
-static t_bool	ph_sleep(t_philo_arg *philo_arg)
+static t_bool	ph_sleep(t_philo_info *info, t_philo_opt *opt)
 {
-	if (!check_philo_stat(philo_arg->opt, philo_arg->info->i, SLEEP))
+	if (!check_philo_stat(opt, info->i, SLEEP))
 		return (false);
-	ms_sleep(philo_arg->opt->tts);
+	ms_sleep(opt->tts);
 	return (true);
 }
 
-static t_bool	ph_think(t_philo_arg *philo_arg)
+static t_bool	ph_think(t_philo_info *info, t_philo_opt *opt)
 {
-	if (!check_philo_stat(philo_arg->opt, philo_arg->info->i, THINK))
+	if (!check_philo_stat(opt, info->i, THINK))
 		return (false);
 	return (true);
 }
 
 void	*routine(void *arg)
 {
-	t_philo_arg	*philo_arg;
-	t_uint		i_philo;
-	t_fork		*my_fork;
+	t_philo_info	*info;
+	t_philo_opt		*opt;
 
-	philo_arg = (t_philo_arg *)arg;
-	i_philo = philo_arg->info->i;
-	my_fork = &(philo_arg->info->my_fork);
-	if (i_philo % 2)
+	info = ((t_philo_arg *)arg)->info;
+	opt = ((t_philo_arg *)arg)->opt;
+	if (info->i % 2)
 		ms_sleep(10);
 	while (1)
 	{
-		if (!ph_take_fork(philo_arg) || !ph_eat(philo_arg) \
-			|| !ph_sleep(philo_arg) || !ph_think(philo_arg))
+		if (!ph_take_fork(info, opt) || !ph_eat(info, opt) \
+			|| !ph_sleep(info, opt) || !ph_think(info, opt))
 			break ;
 	}
-	ph_phtdown_fork(my_fork);
 	return (NULL);
 }

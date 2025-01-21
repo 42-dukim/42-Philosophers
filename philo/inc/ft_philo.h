@@ -62,7 +62,7 @@ typedef struct s_philo_information
 	t_uint			ttpe;
 	int				nme;
 	t_fork			my_fork;
-	pthread_mutex_t	ttpe_mutex;
+	pthread_mutex_t	info_mutex;
 }					t_philo_info;
 
 typedef struct s_philo_argument
@@ -84,18 +84,15 @@ void		ms_sleep(t_uint time);
 
 void		parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo);
 
-void		ph_phtdown_fork(t_fork *my_fork);
 void		create_forks(t_philo *philo);
-
 void		create_philo_infos(t_philo *philo);
-t_bool		start_philo_routine(t_philo *philo, t_philo_arg *arg);
+
 void		*routine(void *opt);
 
 t_bool		check_philo_stat(t_philo_opt *opt, t_uint i_philo, \
 								t_routine_code code);
 
 void		handle_monitoring(t_philo_arg *arg);
-void		handle_philo_end(t_philo *philo, t_philo_arg *arg, \
-								t_bool is_success);
+void		handle_philo_end(t_philo *philo, t_bool is_success);
 
 #endif

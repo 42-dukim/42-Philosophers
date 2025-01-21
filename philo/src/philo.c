@@ -33,26 +33,7 @@ void	create_philo_infos(t_philo *philo)
 		philo->infos[i].my_fork.frt = \
 			&(philo->forks[(i + 1) % philo->opt->nop]);
 		philo->infos[i].my_fork.scd = &(philo->forks[i % philo->opt->nop]);
-		pthread_mutex_init(&(philo->infos[i].ttpe_mutex), NULL);
+		pthread_mutex_init(&(philo->infos[i].info_mutex), NULL);
 		i++;
 	}
-}
-
-t_bool	start_philo_routine(t_philo *philo, t_philo_arg *arg)
-{
-	t_uint		i;
-
-	i = 0;
-	while (i < philo->opt->nop)
-	{
-		arg[i].opt = philo->opt;
-		arg[i].info = &(philo->infos[i]);
-		if (pthread_create(&(philo->threads[i]), NULL, routine, &arg[i]))
-		{
-			philo->opt->nop = i;
-			return (false);
-		}
-		i++;
-	}
-	return (true);
 }

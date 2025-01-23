@@ -29,18 +29,13 @@ static void	print_philo_stat(t_uint i_philo, t_uint time_stamp, \
 
 t_bool	check_philo_stat(t_philo_opt *opt, t_uint i_philo, t_routine_code code)
 {
-	static pthread_mutex_t	print_mutex = PTHREAD_MUTEX_INITIALIZER;
-	t_bool	endflag;
-
 	pthread_mutex_lock(&(opt->opt_mutex));
-	endflag = opt->endflag;
-	pthread_mutex_unlock(&(opt->opt_mutex));
-	if (endflag)
+	if (opt->endflag)
+	{
+		pthread_mutex_unlock(&(opt->opt_mutex));
 		return (false);
-	pthread_mutex_lock(&print_mutex);
+	}
 	print_philo_stat(i_philo + 1, get_timegap_ms(opt->time), code);
-	pthread_mutex_unlock(&print_mutex);
-	if (code == DIED)
-		pthread_mutex_destroy(&print_mutex);
+	pthread_mutex_unlock(&(opt->opt_mutex));
 	return (true);
 }

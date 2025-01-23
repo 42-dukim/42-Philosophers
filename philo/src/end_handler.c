@@ -47,9 +47,6 @@ void	handle_philo_end(t_philo *philo, t_bool is_success)
 		pthread_join(philo->monitors[i], NULL);
 		i++;
 	}
-	// if (philo->monitors)
-	// {
-	// }
 	if (is_success)
 		end_success(philo);
 	else

@@ -46,7 +46,7 @@ typedef struct s_philo_option
 	t_uint			tts;
 	int				nme;
 	struct timeval	time;
-	t_uint			nosp;
+	t_bool			endflag;
 	pthread_mutex_t	opt_mutex;
 }					t_philo_opt;
 
@@ -71,12 +71,18 @@ typedef struct s_philo_argument
 	t_philo_info	*info;
 }					t_philo_arg;
 
+typedef struct s_monitor_argument
+{
+	t_philo_arg	*philo_arg;
+	pthread_t	*philo;
+}	t_monitor_arg;
+
 typedef struct s_philo
 {
 	t_philo_opt		*opt;
 	t_philo_info	*infos;
 	pthread_mutex_t	*forks;
-	pthread_t		*threads;
+	pthread_t		*monitors;
 }					t_philo;
 
 t_uint		get_timegap_ms(struct timeval start_time);
@@ -88,11 +94,11 @@ void		create_forks(t_philo *philo);
 void		create_philo_infos(t_philo *philo);
 
 void		*routine(void *opt);
+void		*monitor(void *arg);
 
 t_bool		check_philo_stat(t_philo_opt *opt, t_uint i_philo, \
 								t_routine_code code);
 
-void		handle_monitoring(t_philo_arg *arg);
 void		handle_philo_end(t_philo *philo, t_bool is_success);
 
 #endif

@@ -16,12 +16,11 @@ static void	died_philo(t_philo_info	*info, t_philo_opt *opt)
 {
 	check_philo_stat(opt, info->i, DIED);
 	pthread_mutex_lock(&(opt->opt_mutex));
-	opt->nosp = 0;
+	opt->endflag = true;
 	pthread_mutex_unlock(&(opt->opt_mutex));
-	// ph_phtdown_fork((&info->my_fork));
 }
 
-static t_bool	decrease_philo_ttpe(t_philo_info *info, t_philo_opt *opt)
+static t_bool	check_philo_ttpe(t_philo_info *info, t_philo_opt *opt)
 {
 	t_uint	ttpe;
 	
@@ -36,24 +35,39 @@ static t_bool	decrease_philo_ttpe(t_philo_info *info, t_philo_opt *opt)
 	return (true);
 }
 
-void	handle_monitoring(t_philo_arg *arg)
+// static	t_bool	check_philo_nme(t_philo_info *info, t_philo_opt *opt)
+// {
+// 	t_uint	nme;
+	
+// 	pthread_mutex_lock(&(info->info_mutex));
+// 	nme = info->nme;
+// 	pthread_mutex_unlock(&(info->info_mutex));
+// 	if (nme >= opt->nme)
+// 	{
+// 		// pthread_mutex_lock(&(opt->opt_mutex));
+// 		// if (opt->endflag != 0)
+// 		// 	opt->nosp--;
+// 		// pthread_mutex_unlock(&(opt->opt_mutex));
+// 		return (false);
+// 	}
+// 	return (true);
+// }
+
+void	*monitor(void *arg)
 {
 	t_philo_info	*info;
 	t_philo_opt		*opt;
-	t_uint			nosp;
+	pthread_t		*philo;
 
-	info = arg->info;
-	opt = arg->opt;
+	info = ((t_monitor_arg *)arg)->philo_arg->info;
+	opt = ((t_monitor_arg *)arg)->philo_arg->opt;
+	philo = ((t_monitor_arg *)arg)->philo;
 	while (1)
 	{
-		pthread_mutex_lock(&(opt->opt_mutex));
-		nosp = opt->nosp;
-		pthread_mutex_unlock(&(opt->opt_mutex));
-		if (!nosp)
-			break ;
 		ms_sleep(1);
-		if (!decrease_philo_ttpe(info, opt))
+		if (!check_philo_ttpe(info, opt))
 			break ;
 	}
-	// handle_philo_end(philo, arg, true);
+	pthread_join(*philo, NULL);
+	return (NULL);
 }

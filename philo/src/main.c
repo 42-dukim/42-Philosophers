@@ -14,17 +14,23 @@
 
 static void	start_philo_routine(t_philo *philo)
 {
-	t_uint		i;
-	t_philo_arg *arg;
+	t_uint			i;
+	t_philo_arg 	*philo_arg;
+	t_monitor_arg	*monitor_arg;
+	pthread_t		*philo_thread;
 
 	i = 0;
 	while (i < philo->opt->nop)
 	{
-		arg = malloc(sizeof(t_philo_arg) * 1);
-		arg->opt = philo->opt;
-		arg->info = &(philo->infos[i]);
-		pthread_create(&(philo->threads[i]), NULL, routine, arg);
-		// monitor thread
+		philo_arg = malloc(sizeof(t_philo_arg) * 1);
+		philo_arg->opt = philo->opt;
+		philo_arg->info = &(philo->infos[i]);
+		philo_thread = malloc(sizeof(pthread_t) * 1);	// NULL 처리?
+		pthread_create(philo_thread, NULL, routine, philo_arg);
+		monitor_arg = malloc(sizeof(t_monitor_arg) * 1);	// NULL 처리?
+		monitor_arg->philo_arg = philo_arg;
+		monitor_arg->philo = philo_thread;
+		pthread_create(&(philo->monitors[i]), NULL, monitor, monitor_arg);
 		i++;
 	}
 }
@@ -37,8 +43,8 @@ static t_bool	init_philo(t_philo *philo, int argc, char *argv[])
 	create_philo_infos(philo);
 	if (!philo->infos)
 		return (false);
-	philo->threads = (pthread_t *)malloc(sizeof(pthread_t) * philo->opt->nop);
-	if (!philo->threads)
+	philo->monitors = (pthread_t *)malloc(sizeof(pthread_t) * philo->opt->nop);
+	if (!philo->monitors)
 		return (false);
 	return (true);
 }
@@ -57,4 +63,5 @@ int	main(int argc, char *argv[])
 	start_philo_routine(&philo);
     // n 개의 모니터링 쓰레드가 종료되길 wait 해야할 듯?
 	// handle_monitoring(&philo, arg);
+	handle_philo_end(&philo, true);
 }

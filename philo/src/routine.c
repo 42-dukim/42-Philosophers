@@ -25,24 +25,26 @@ static t_bool	ph_take_fork(t_philo_info *info, t_philo_opt *opt)
 
 static t_bool	ph_eat(t_philo_info *info, t_philo_opt *opt)
 {
+	t_bool	res;
+
+	res = true;
 	if (!check_philo_stat(opt, info->i, EAT))
-		return (false);
-	pthread_mutex_lock(&(info->info_mutex));
-	info->ttpe = get_timegap_ms(opt->time);
-	pthread_mutex_unlock(&(info->info_mutex));
-	ms_sleep(opt->tte);
-	info->nme += 1;
-	if (info->nme == opt->nme)
+		res = false;
+	else
 	{
-		pthread_mutex_lock(&(opt->opt_mutex));
-		if (opt->nosp != 0)
-			opt->nosp--;
-		pthread_mutex_unlock(&(opt->opt_mutex));
-		return (false);
+		pthread_mutex_lock(&(info->info_mutex));
+		info->ttpe = get_timegap_ms(opt->time);
+		pthread_mutex_unlock(&(info->info_mutex));
+		ms_sleep(opt->tte);
+		pthread_mutex_lock(&(info->info_mutex));
+		info->nme += 1;
+		if (info->nme == opt->nme)
+			res = false;
+		pthread_mutex_unlock(&(info->info_mutex));
 	}
 	pthread_mutex_unlock(info->my_fork.frt);
 	pthread_mutex_unlock(info->my_fork.scd);
-	return (true);
+	return (res);
 }
 
 static t_bool	ph_sleep(t_philo_info *info, t_philo_opt *opt)
@@ -67,7 +69,7 @@ void	*routine(void *arg)
 
 	info = ((t_philo_arg *)arg)->info;
 	opt = ((t_philo_arg *)arg)->opt;
-	if (info->i % 2)
+	if ((info->i % 2))
 		ms_sleep(10);
 	while (1)
 	{

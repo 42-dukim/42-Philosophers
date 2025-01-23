@@ -57,5 +57,7 @@ void	*monitor(void *arg)
 			break ;
 	}
 	pthread_join(*philo, NULL);
+	free(philo);
+	free(arg);
 	return (NULL);
 }

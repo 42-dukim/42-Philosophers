@@ -35,11 +35,14 @@ static t_bool	ph_eat(t_philo_info *info, t_philo_opt *opt)
 	t_bool	res;
 
 	res = true;
+	pthread_mutex_lock(&(info->info_mutex));
 	if (!check_philo_stat(opt, info->i, EAT))
+	{
 		res = false;
+		pthread_mutex_unlock(&(info->info_mutex));
+	}
 	else
 	{
-		pthread_mutex_lock(&(info->info_mutex));
 		info->ttpe = get_timegap_ms(opt->time);
 		pthread_mutex_unlock(&(info->info_mutex));
 		ms_sleep(opt->tte);
@@ -85,5 +88,6 @@ void	*routine(void *arg)
 	pthread_mutex_lock(&(info->info_mutex));
 	info->is_live = false;
 	pthread_mutex_unlock(&(info->info_mutex));
+	free(arg);
 	return (NULL);
 }

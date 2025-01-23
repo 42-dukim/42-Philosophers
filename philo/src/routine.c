@@ -36,11 +36,9 @@ static t_bool	ph_eat(t_philo_info *info, t_philo_opt *opt)
 		info->ttpe = get_timegap_ms(opt->time);
 		pthread_mutex_unlock(&(info->info_mutex));
 		ms_sleep(opt->tte);
-		pthread_mutex_lock(&(info->info_mutex));
 		info->nme += 1;
-		if (info->nme == opt->nme)
+		if (opt->nme != -1 && info->nme == opt->nme)
 			res = false;
-		pthread_mutex_unlock(&(info->info_mutex));
 	}
 	pthread_mutex_unlock(info->my_fork.frt);
 	pthread_mutex_unlock(info->my_fork.scd);
@@ -77,5 +75,8 @@ void	*routine(void *arg)
 			|| !ph_sleep(info, opt) || !ph_think(info, opt))
 			break ;
 	}
+	pthread_mutex_lock(&(info->info_mutex));
+	info->is_live = false;
+	pthread_mutex_unlock(&(info->info_mutex));
 	return (NULL);
 }

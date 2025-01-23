@@ -35,35 +35,23 @@ static t_bool	check_philo_ttpe(t_philo_info *info, t_philo_opt *opt)
 	return (true);
 }
 
-// static	t_bool	check_philo_nme(t_philo_info *info, t_philo_opt *opt)
-// {
-// 	t_uint	nme;
-	
-// 	pthread_mutex_lock(&(info->info_mutex));
-// 	nme = info->nme;
-// 	pthread_mutex_unlock(&(info->info_mutex));
-// 	if (nme >= opt->nme)
-// 	{
-// 		// pthread_mutex_lock(&(opt->opt_mutex));
-// 		// if (opt->endflag != 0)
-// 		// 	opt->nosp--;
-// 		// pthread_mutex_unlock(&(opt->opt_mutex));
-// 		return (false);
-// 	}
-// 	return (true);
-// }
-
 void	*monitor(void *arg)
 {
 	t_philo_info	*info;
 	t_philo_opt		*opt;
 	pthread_t		*philo;
+	t_bool			is_live;
 
 	info = ((t_monitor_arg *)arg)->philo_arg->info;
 	opt = ((t_monitor_arg *)arg)->philo_arg->opt;
 	philo = ((t_monitor_arg *)arg)->philo;
 	while (1)
 	{
+		pthread_mutex_lock(&(info->info_mutex));
+		is_live = info->is_live;
+		pthread_mutex_unlock(&(info->info_mutex));
+		if (!is_live)
+			break ;
 		ms_sleep(1);
 		if (!check_philo_ttpe(info, opt))
 			break ;

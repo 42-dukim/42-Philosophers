@@ -62,6 +62,7 @@ typedef struct s_philo_information
 	t_uint			ttpe;
 	int				nme;
 	t_fork			my_fork;
+	t_bool			is_live;
 	pthread_mutex_t	info_mutex;
 }					t_philo_info;
 

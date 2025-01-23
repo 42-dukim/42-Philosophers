@@ -20,6 +20,13 @@ static t_bool	ph_take_fork(t_philo_info *info, t_philo_opt *opt)
 		pthread_mutex_unlock(info->my_fork.frt);
 		return (false);
 	}
+	if (opt->nop == 1)
+	{
+		pthread_mutex_unlock(info->my_fork.frt);
+		while (check_philo_stat(opt, info->i, -1))
+			ms_sleep(1);
+		return (false);
+	}
 	pthread_mutex_lock(info->my_fork.scd);
 	if (!check_philo_stat(opt, info->i, TAKE_FORK))
 	{

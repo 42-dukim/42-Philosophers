@@ -23,7 +23,7 @@ static void	died_philo(t_philo_info	*info, t_philo_opt *opt)
 static t_bool	check_philo_ttpe(t_philo_info *info, t_philo_opt *opt)
 {
 	t_uint	ttpe;
-	
+
 	pthread_mutex_lock(&(info->info_mutex));
 	ttpe = info->ttpe;
 	pthread_mutex_unlock(&(info->info_mutex));

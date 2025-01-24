@@ -12,10 +12,10 @@
 
 #include "../inc/ft_philo.h"
 
-static t_fork order_myfork(t_uint i, t_uint nop, pthread_mutex_t *forks)
+static t_fork	order_myfork(t_uint i, t_uint nop, pthread_mutex_t *forks)
 {
 	t_fork	myfork;
-	
+
 	if (nop % 2 || i % 2)
 	{
 		myfork.frt = &(forks[(i + 1) % nop]);
@@ -47,7 +47,8 @@ void	create_philo_infos(t_philo *philo)
 		philo->infos[i].i = i;
 		philo->infos[i].ttpe = 0;
 		philo->infos[i].nme = 0;
-		philo->infos[i].my_fork = order_myfork(i, philo->opt->nop, philo->forks);
+		philo->infos[i].my_fork = \
+			order_myfork(i, philo->opt->nop, philo->forks);
 		philo->infos[i].is_live = true;
 		pthread_mutex_init(&(philo->infos[i].info_mutex), NULL);
 		i++;

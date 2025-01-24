@@ -37,7 +37,7 @@ static void	handle_philo_end(t_philo *philo)
 static void	start_philo_routine(t_philo *philo)
 {
 	t_uint			i;
-	t_philo_arg 	*philo_arg;
+	t_philo_arg		*philo_arg;
 	t_monitor_arg	*monitor_arg;
 	pthread_t		*philo_thread;
 

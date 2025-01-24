@@ -12,7 +12,7 @@
 
 #include "../inc/ft_philo.h"
 
-static int	ph_atoi(const char *nptr)
+static t_uint	ph_atoi(const char *nptr)
 {
 	int	sum;
 
@@ -21,7 +21,9 @@ static int	ph_atoi(const char *nptr)
 		nptr++;
 	if (*nptr == '-')
 		return (0);
-	while (*nptr != '\0' && (0 <= *nptr && *nptr <= '9'))
+	if (*nptr == '+')
+		nptr++;
+	while (*nptr != '\0' && ('0' <= *nptr && *nptr <= '9'))
 	{
 		sum = sum * 10 + (*nptr - '0');
 		nptr++;

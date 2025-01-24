@@ -11,11 +11,11 @@
 # **************************************************************************** #
 
 CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -I inc
+CFLAGS  = -Wall -Wextra -Werror -I inc -fsanitize=address
 NAME 	= philo
 SRCDIR  = src
 INCDIR  = inc
-SRCS    = end_handler.c main.c parse_arg.c print_phio.c utils.c fork.c monitoring.c philo.c routine.c
+SRCS    = main.c parse_arg.c print_phio.c utils.c fork.c monitor.c philo.c routine.c
 SRCS 	:=	$(SRCS:%=$(SRCDIR)/%)
 OBJS 	:=	$(SRCS:%.c=%.o)
 

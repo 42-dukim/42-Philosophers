@@ -100,6 +100,4 @@ void		*monitor(void *arg);
 t_bool		check_philo_stat(t_philo_opt *opt, t_uint i_philo, \
 								t_routine_code code);
 
-void		handle_philo_end(t_philo *philo, t_bool is_success);
-
 #endif

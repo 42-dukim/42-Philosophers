@@ -31,13 +31,3 @@ void	create_forks(t_philo *philo)
 		i++;
 	}
 }
-
-// void	ph_phtdown_fork(t_fork *my_fork)
-// {
-// 	if (my_fork->frt_taken)
-// 		pthread_mutex_unlock(my_fork->frt);
-// 	if (my_fork->scd_taken)
-// 		pthread_mutex_unlock(my_fork->scd);
-// 	my_fork->frt_taken = false;
-// 	my_fork->scd_taken = false;
-// }

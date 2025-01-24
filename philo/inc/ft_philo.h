@@ -28,15 +28,15 @@ typedef enum e_bool
 	true
 }	t_bool;
 
-typedef enum e_routine_code
+typedef enum e_action_code
 {
 	TAKE_FORK = 0,
 	EAT,
 	SLEEP,
 	THINK,
 	DIED,
-	END
-}	t_routine_code;
+	NOTTING,
+}	t_action_code;
 
 typedef struct s_philo_option
 {
@@ -45,10 +45,10 @@ typedef struct s_philo_option
 	t_uint			tte;
 	t_uint			tts;
 	int				nme;
-	struct timeval	time;
+	struct timeval	starttime;
 	t_bool			endflag;
 	pthread_mutex_t	opt_mutex;
-}					t_philo_opt;
+}	t_philo_opt;
 
 typedef struct s_fork
 {
@@ -62,9 +62,9 @@ typedef struct s_philo_information
 	t_uint			ttpe;
 	int				nme;
 	t_fork			my_fork;
-	t_bool			is_live;
+	t_bool			endflag;
 	pthread_mutex_t	info_mutex;
-}					t_philo_info;
+}	t_philo_info;
 
 typedef struct s_philo_argument
 {
@@ -81,23 +81,26 @@ typedef struct s_monitor_argument
 typedef struct s_philo
 {
 	t_philo_opt		*opt;
-	t_philo_info	*infos;
 	pthread_mutex_t	*forks;
+	t_philo_info	*infos;
 	pthread_t		*monitors;
-}					t_philo;
+}	t_philo;
 
 t_uint		get_timegap_ms(struct timeval start_time);
 void		ms_sleep(t_uint time);
+t_bool		ms_sleep_withchecking(t_uint time, t_uint i_philo, \
+									t_philo_opt *opt);
 
 void		parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo);
 
 void		create_forks(t_philo *philo);
 void		create_philo_infos(t_philo *philo);
+t_bool		ph_action(t_action_code code, t_philo_info *info, t_philo_opt *opt);
 
 void		*routine(void *opt);
 void		*monitor(void *arg);
 
 t_bool		check_philo_stat(t_philo_opt *opt, t_uint i_philo, \
-								t_routine_code code);
+								t_action_code code);
 
 #endif

@@ -33,10 +33,21 @@ void	ms_sleep(t_uint time)
 		return ;
 	}
 	gettimeofday(&start_time, NULL);
-	while (1)
+	while (get_timegap_ms(start_time) < time)
+		usleep(250);
+}
+
+t_bool	ms_sleep_withchecking(t_uint time, t_uint i_philo, \
+								t_philo_opt *opt)
+{
+	struct timeval	start_time;
+
+	gettimeofday(&start_time, NULL);
+	while (time == 0 || get_timegap_ms(start_time) < time)
 	{
-		usleep(500);
-		if (get_timegap_ms(start_time) >= time)
-			return ;
+		if (!check_philo_stat(opt, i_philo, NOTTING))
+			return (false);
+		usleep(250);
 	}
+	return (true);
 }

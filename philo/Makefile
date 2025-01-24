@@ -15,7 +15,7 @@ CFLAGS  = -Wall -Wextra -Werror -I inc
 NAME 	= philo
 SRCDIR  = src
 INCDIR  = inc
-SRCS    = main.c parse_arg.c print_phio.c utils.c fork.c monitor.c philo.c routine.c
+SRCS    = main.c parser_arg.c utils.c fork.c philo.c philo_action.c philo_stat.c monitor.c
 SRCS 	:=	$(SRCS:%=$(SRCDIR)/%)
 OBJS 	:=	$(SRCS:%.c=%.o)
 

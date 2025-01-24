@@ -23,8 +23,7 @@ static t_bool	ph_take_fork(t_philo_info *info, t_philo_opt *opt)
 	if (opt->nop == 1)
 	{
 		pthread_mutex_unlock(info->my_fork.frt);
-		while (check_philo_stat(opt, info->i, -1))
-			ms_sleep(1);
+		ms_sleep_withchecking(0, info->i, opt);
 		return (false);
 	}
 	pthread_mutex_lock(info->my_fork.scd);
@@ -39,34 +38,25 @@ static t_bool	ph_take_fork(t_philo_info *info, t_philo_opt *opt)
 
 static t_bool	ph_eat(t_philo_info *info, t_philo_opt *opt)
 {
-	t_bool	res;
-
-	res = true;
-	pthread_mutex_lock(&(info->info_mutex));
 	if (!check_philo_stat(opt, info->i, EAT))
-	{
-		res = false;
-		pthread_mutex_unlock(&(info->info_mutex));
-	}
-	else
-	{
-		info->ttpe = get_timegap_ms(opt->time);
-		pthread_mutex_unlock(&(info->info_mutex));
-		ms_sleep(opt->tte);
-		info->nme += 1;
-		if (opt->nme != -1 && info->nme == opt->nme)
-			res = false;
-	}
-	pthread_mutex_unlock(info->my_fork.frt);
-	pthread_mutex_unlock(info->my_fork.scd);
-	return (res);
+		return (false);
+	pthread_mutex_lock(&(info->info_mutex));
+	info->ttpe = get_timegap_ms(opt->starttime);
+	pthread_mutex_unlock(&(info->info_mutex));
+	if (!ms_sleep_withchecking(opt->tte, info->i, opt))
+		return (false);
+	info->nme += 1;
+	if (opt->nme != -1 && info->nme == opt->nme)
+		return (false);
+	return (true);
 }
 
 static t_bool	ph_sleep(t_philo_info *info, t_philo_opt *opt)
 {
 	if (!check_philo_stat(opt, info->i, SLEEP))
 		return (false);
-	ms_sleep(opt->tts);
+	if (!ms_sleep_withchecking(opt->tts, info->i, opt))
+		return (false);
 	return (true);
 }
 
@@ -77,24 +67,21 @@ static t_bool	ph_think(t_philo_info *info, t_philo_opt *opt)
 	return (true);
 }
 
-void	*routine(void *arg)
+t_bool	ph_action(t_action_code code, t_philo_info *info, t_philo_opt *opt)
 {
-	t_philo_info	*info;
-	t_philo_opt		*opt;
+	t_bool	res;
 
-	info = ((t_philo_arg *)arg)->info;
-	opt = ((t_philo_arg *)arg)->opt;
-	if ((info->i % 2))
-		ms_sleep(10);
-	while (1)
+	if (code == TAKE_FORK)
+		res = ph_take_fork(info, opt);
+	if (code == EAT)
 	{
-		if (!ph_take_fork(info, opt) || !ph_eat(info, opt) \
-			|| !ph_sleep(info, opt) || !ph_think(info, opt))
-			break ;
+		res = ph_eat(info, opt);
+		pthread_mutex_unlock(info->my_fork.frt);
+		pthread_mutex_unlock(info->my_fork.scd);
 	}
-	pthread_mutex_lock(&(info->info_mutex));
-	info->is_live = false;
-	pthread_mutex_unlock(&(info->info_mutex));
-	free(arg);
-	return (NULL);
+	if (code == SLEEP)
+		res = ph_sleep(info, opt);
+	if (code == THINK)
+		res = ph_think(info, opt);
+	return (res);
 }

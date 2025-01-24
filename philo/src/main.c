@@ -12,7 +12,7 @@
 
 #include "../inc/ft_philo.h"
 
-static void	handle_philo_end(t_philo *philo)
+static void	_end_program(t_philo *philo)
 {
 	t_uint	i;
 
@@ -34,7 +34,7 @@ static void	handle_philo_end(t_philo *philo)
 	free(philo->infos);
 }
 
-static void	start_philo_routine(t_philo *philo)
+static void	_start_program(t_philo *philo)
 {
 	t_uint			i;
 	t_philo_arg		*philo_arg;
@@ -57,9 +57,8 @@ static void	start_philo_routine(t_philo *philo)
 	}
 }
 
-static t_bool	init_philo(t_philo *philo, int argc, char *argv[])
+static t_bool	_init_arg(t_philo *philo, int argc, char *argv[])
 {
-	memset(philo, 0, sizeof(t_philo));
 	parse_arg_to_philo_opt(argc, argv, philo);
 	create_forks(philo);
 	create_philo_infos(philo);
@@ -73,12 +72,12 @@ static t_bool	init_philo(t_philo *philo, int argc, char *argv[])
 
 int	main(int argc, char *argv[])
 {
-	t_philo			philo;
+	t_philo	philo;
 
 	if (argc < 5 || argc > 6)
 		return (0);
-	if (!init_philo(&philo, argc, argv))
+	if (!_init_arg(&philo, argc, argv))
 		return (0);
-	start_philo_routine(&philo);
-	handle_philo_end(&philo);
+	_start_program(&philo);
+	_end_program(&philo);
 }

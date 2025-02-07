@@ -34,7 +34,7 @@ void	ms_sleep(t_uint time)
 	}
 	gettimeofday(&start_time, NULL);
 	while (get_timegap_ms(start_time) < time)
-		usleep(250);
+		usleep(100);
 }
 
 t_bool	ms_sleep_withchecking(t_uint time, t_philo_opt *opt)
@@ -46,7 +46,7 @@ t_bool	ms_sleep_withchecking(t_uint time, t_philo_opt *opt)
 	{
 		if (!check_philo_stat(opt))
 			return (false);
-		usleep(250);
+		usleep(100);
 	}
 	return (true);
 }

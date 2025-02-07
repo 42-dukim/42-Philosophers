@@ -53,6 +53,7 @@ void	parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo)
 	}
 	gettimeofday(&(philo->opt->starttime), NULL);
 	philo->opt->endflag = false;
+	philo->opt->printflag = true;
 	pthread_mutex_init(&philo->opt->opt_mutex, NULL);
 	pthread_mutex_init(&philo->opt->print_mutex, NULL);
 }

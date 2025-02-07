@@ -46,6 +46,7 @@ typedef struct s_philo_option
 	int				nme;
 	struct timeval	starttime;
 	t_bool			endflag;
+	t_bool			printflag;
 	pthread_mutex_t	opt_mutex;
 	pthread_mutex_t	print_mutex;
 }	t_philo_opt;
@@ -101,4 +102,5 @@ void		*monitor(void *arg);
 
 void		print_philo_stat(t_uint i_philo, t_action_code code, t_philo_opt *opt);
 t_bool		check_philo_stat(t_philo_opt *opt);
+
 #endif

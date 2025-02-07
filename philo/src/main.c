@@ -28,6 +28,8 @@ static void	_end_program(t_philo *philo)
 		pthread_mutex_destroy(&(philo->forks[i]));
 		i++;
 	}
+	pthread_mutex_destroy(&(philo->opt->opt_mutex));
+	pthread_mutex_destroy(&(philo->opt->print_mutex));
 	free(philo->opt);
 	free(philo->forks);
 	free(philo->monitors);
@@ -42,6 +44,7 @@ static void	_start_program(t_philo *philo)
 	pthread_t		*philo_thread;
 
 	i = 0;
+	pthread_mutex_lock((&philo->opt->opt_mutex));
 	while (i < philo->opt->nop)
 	{
 		philo_arg = malloc(sizeof(t_philo_arg) * 1);
@@ -55,6 +58,8 @@ static void	_start_program(t_philo *philo)
 		pthread_create(&(philo->monitors[i]), NULL, monitor, monitor_arg);
 		i++;
 	}
+	gettimeofday(&(philo->opt->starttime), NULL);
+	pthread_mutex_unlock((&philo->opt->opt_mutex));
 }
 
 static t_bool	_init_arg(t_philo *philo, int argc, char *argv[])

@@ -16,7 +16,7 @@ static t_fork	order_myfork(t_uint i, t_uint nop, pthread_mutex_t *forks)
 {
 	t_fork	myfork;
 
-	if (i % 2)
+	if (nop % 2 || i % 2)
 	{
 		myfork.frt = &(forks[(i + 1) % nop]);
 		myfork.scd = &(forks[i % nop]);
@@ -64,8 +64,12 @@ void	*routine(void *arg)
 	info = ((t_philo_arg *)arg)->info;
 	opt = ((t_philo_arg *)arg)->opt;
 	code = 0;
-	// if (info->i % 2)
-	// 	ms_sleep(10);
+	pthread_mutex_lock(&(info->info_mutex));
+	pthread_mutex_lock((&opt->opt_mutex));
+	pthread_mutex_unlock((&opt->opt_mutex));
+	pthread_mutex_unlock(&(info->info_mutex));
+	if (info->i % 2)
+		ms_sleep(10);
 	while (1)
 	{
 		if (!ph_action(code, info, opt))

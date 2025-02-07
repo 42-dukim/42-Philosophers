@@ -14,7 +14,6 @@
 
 static t_bool	ph_take_fork(t_philo_info *info, t_philo_opt *opt)
 {
-	// fork take하기 전에도 check?
 	pthread_mutex_lock(info->my_fork.frt);
 	if (!check_philo_stat(opt))
 	{

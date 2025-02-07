@@ -35,7 +35,6 @@ typedef enum e_action_code
 	SLEEP,
 	THINK,
 	DIED,
-	NOTTING,
 }	t_action_code;
 
 typedef struct s_philo_option
@@ -48,13 +47,14 @@ typedef struct s_philo_option
 	struct timeval	starttime;
 	t_bool			endflag;
 	pthread_mutex_t	opt_mutex;
+	pthread_mutex_t	print_mutex;
 }	t_philo_opt;
 
 typedef struct s_fork
 {
 	pthread_mutex_t	*frt;
 	pthread_mutex_t	*scd;
-}					t_fork;
+}	t_fork;
 
 typedef struct s_philo_information
 {
@@ -88,8 +88,7 @@ typedef struct s_philo
 
 t_uint		get_timegap_ms(struct timeval start_time);
 void		ms_sleep(t_uint time);
-t_bool		ms_sleep_withchecking(t_uint time, t_uint i_philo, \
-									t_philo_opt *opt);
+t_bool		ms_sleep_withchecking(t_uint time, t_philo_opt *opt);
 
 void		parse_arg_to_philo_opt(int argc, char *argv[], t_philo *philo);
 
@@ -100,7 +99,6 @@ t_bool		ph_action(t_action_code code, t_philo_info *info, t_philo_opt *opt);
 void		*routine(void *opt);
 void		*monitor(void *arg);
 
-t_bool		check_philo_stat(t_philo_opt *opt, t_uint i_philo, \
-								t_action_code code);
-
+void		print_philo_stat(t_uint i_philo, t_action_code code, t_philo_opt *opt);
+t_bool		check_philo_stat(t_philo_opt *opt);
 #endif

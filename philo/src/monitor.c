@@ -14,9 +14,12 @@
 
 static void	died_philo(t_philo_info	*info, t_philo_opt *opt)
 {
-	check_philo_stat(opt, info->i, DIED);
 	pthread_mutex_lock(&(opt->opt_mutex));
-	opt->endflag = true;
+	if (!opt->endflag)	// 동시에 죽는 경우?
+	{
+		print_philo_stat(info->i, DIED, opt);
+		opt->endflag = true;
+	}	
 	pthread_mutex_unlock(&(opt->opt_mutex));
 }
 

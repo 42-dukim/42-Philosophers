@@ -14,36 +14,40 @@
 
 static t_bool	ph_take_fork(t_philo_info *info, t_philo_opt *opt)
 {
+	// fork take하기 전에도 check?
 	pthread_mutex_lock(info->my_fork.frt);
-	if (!check_philo_stat(opt, info->i, TAKE_FORK))
+	if (!check_philo_stat(opt))
 	{
 		pthread_mutex_unlock(info->my_fork.frt);
 		return (false);
 	}
+	print_philo_stat(info->i, TAKE_FORK, opt);
 	if (opt->nop == 1)
 	{
 		pthread_mutex_unlock(info->my_fork.frt);
-		ms_sleep_withchecking(0, info->i, opt);
+		ms_sleep_withchecking(0, opt);
 		return (false);
 	}
 	pthread_mutex_lock(info->my_fork.scd);
-	if (!check_philo_stat(opt, info->i, TAKE_FORK))
+	if (!check_philo_stat(opt))
 	{
 		pthread_mutex_unlock(info->my_fork.frt);
 		pthread_mutex_unlock(info->my_fork.scd);
 		return (false);
 	}
+	print_philo_stat(info->i, TAKE_FORK, opt);
 	return (true);
 }
 
 static t_bool	ph_eat(t_philo_info *info, t_philo_opt *opt)
 {
-	if (!check_philo_stat(opt, info->i, EAT))
+	if (!check_philo_stat(opt))
 		return (false);
 	pthread_mutex_lock(&(info->info_mutex));
+	print_philo_stat(info->i, EAT, opt);
 	info->ttpe = get_timegap_ms(opt->starttime);
 	pthread_mutex_unlock(&(info->info_mutex));
-	if (!ms_sleep_withchecking(opt->tte, info->i, opt))
+	if (!ms_sleep_withchecking(opt->tte, opt))
 		return (false);
 	info->nme += 1;
 	if (opt->nme != -1 && info->nme == opt->nme)
@@ -53,17 +57,19 @@ static t_bool	ph_eat(t_philo_info *info, t_philo_opt *opt)
 
 static t_bool	ph_sleep(t_philo_info *info, t_philo_opt *opt)
 {
-	if (!check_philo_stat(opt, info->i, SLEEP))
+	if (!check_philo_stat(opt))
 		return (false);
-	if (!ms_sleep_withchecking(opt->tts, info->i, opt))
+	print_philo_stat(info->i, SLEEP, opt);
+	if (!ms_sleep_withchecking(opt->tts, opt))
 		return (false);
 	return (true);
 }
 
 static t_bool	ph_think(t_philo_info *info, t_philo_opt *opt)
 {
-	if (!check_philo_stat(opt, info->i, THINK))
+	if (!check_philo_stat(opt))
 		return (false);
+	print_philo_stat(info->i, THINK, opt);
 	return (true);
 }
 

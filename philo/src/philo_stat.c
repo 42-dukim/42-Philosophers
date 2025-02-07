@@ -12,9 +12,12 @@
 
 #include "../inc/ft_philo.h"
 
-static void	print_philo_stat(t_uint i_philo, t_uint time_stamp, \
-								t_action_code code)
+void	print_philo_stat(t_uint i_philo, t_action_code code, t_philo_opt *opt)
 {
+	t_uint	time_stamp;
+	
+	pthread_mutex_lock((&opt->print_mutex));
+	time_stamp = get_timegap_ms(opt->starttime);
 	if (code == TAKE_FORK)
 		printf("%-5u %u has taken a fork\n", time_stamp, i_philo);
 	if (code == EAT)
@@ -25,9 +28,10 @@ static void	print_philo_stat(t_uint i_philo, t_uint time_stamp, \
 		printf("%-5u %u is thinking\n", time_stamp, i_philo);
 	if (code == DIED)
 		printf("%-5u %u is died\n", time_stamp, i_philo);
+	pthread_mutex_unlock((&opt->print_mutex));
 }
 
-t_bool	check_philo_stat(t_philo_opt *opt, t_uint i_philo, t_action_code code)
+t_bool	check_philo_stat(t_philo_opt *opt)
 {
 	pthread_mutex_lock(&(opt->opt_mutex));
 	if (opt->endflag)
@@ -35,8 +39,6 @@ t_bool	check_philo_stat(t_philo_opt *opt, t_uint i_philo, t_action_code code)
 		pthread_mutex_unlock(&(opt->opt_mutex));
 		return (false);
 	}
-	if (code != NOTTING)
-		print_philo_stat(i_philo + 1, get_timegap_ms(opt->starttime), code);
 	pthread_mutex_unlock(&(opt->opt_mutex));
 	return (true);
 }

@@ -15,25 +15,30 @@ CFLAGS  = -Wall -Wextra -Werror -I inc
 NAME 	= philo
 SRCDIR  = src
 INCDIR  = inc
+OBJDIR  = obj
 SRCS    = main.c parser_arg.c utils.c fork.c philo.c philo_action.c philo_stat.c monitor.c
 SRCS 	:=	$(SRCS:%=$(SRCDIR)/%)
-OBJS 	:=	$(SRCS:%.c=%.o)
+OBJS 	:=	$(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 all		:	$(NAME)
 
 $(NAME)	:	$(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
-$(OBJS)	:	$(SRCS)
-	$(CC) $(CFLAGS) -c $(SRCS)
-	@mv *.o $(SRCDIR)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCDIR)/ft_philo.h
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@rm -f $(OBJS)
+	@rm -rf $(OBJDIR)
 
 fclean:		clean
 	@rm -f $(NAME)
 
 re:			fclean all
 
-.PHONY: all clean fclean re
+dev:
+	$(MAKE) CC=clang CFLAGS="$(CFLAGS) -O0 -g3 -DDEBUG -fsanitize=thread -fno-omit-frame-pointer" re
+
+.PHONY: all clean fclean re dev

@@ -48,5 +48,6 @@ t_bool	ms_sleep_withchecking(t_uint time, t_philo_opt *opt)
 			return (false);
 		usleep(100);
 	}
+	usleep(100);
 	return (true);
 }

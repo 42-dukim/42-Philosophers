@@ -15,22 +15,25 @@
 void	print_philo_stat(t_uint i_philo, t_action_code code, t_philo_opt *opt)
 {
 	t_uint	time_stamp;
-	
+
 	pthread_mutex_lock((&opt->print_mutex));
 	if (!opt->printflag)
-		return ;
+	{
+		pthread_mutex_unlock((&opt->print_mutex));
+		return;
+	}
 	time_stamp = get_timegap_ms(opt->starttime);
 	if (code == TAKE_FORK)
-		printf("%-5u %u has taken a fork\n", time_stamp, i_philo);
+		printf("%-5u %u has taken a fork\n", time_stamp, i_philo + 1);
 	if (code == EAT)
-		printf("%-5u %u is eating\n", time_stamp, i_philo);
+		printf("%-5u %u is eating\n", time_stamp, i_philo + 1);
 	if (code == SLEEP)
-		printf("%-5u %u is sleeping\n", time_stamp, i_philo);
+		printf("%-5u %u is sleeping\n", time_stamp, i_philo + 1);
 	if (code == THINK)
-		printf("%-5u %u is thinking\n", time_stamp, i_philo);
+		printf("%-5u %u is thinking\n", time_stamp, i_philo + 1);
 	if (code == DIED)
 	{
-		printf("%-5u %u is died\n", time_stamp, i_philo);
+		printf("%-5u %u died\n", time_stamp, i_philo + 1);
 		opt->printflag = false;
 	}
 	pthread_mutex_unlock((&opt->print_mutex));
